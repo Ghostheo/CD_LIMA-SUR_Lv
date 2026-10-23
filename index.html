@@ -79,7 +79,7 @@
       <div class="flex flex-col md:flex-row gap-2 md:items-center w-full md:w-auto">
         <input id="search-input" type="text" placeholder="Buscar por placa, N° trans, procedencia..." class="border rounded-md px-3 py-2 text-xs w-full md:w-80">
         <div class="flex gap-2">
-          <button id="btn-clear" type="button" onclick="if(confirm('¿Limpiar la búsqueda?')){document.getElementById('search-input').value=''; updateDashboard(true);}" class="bg-[#C62828] text-white text-xs font-bold px-4 py-2 rounded-md hover:bg-red-700">LIMPIAR</button>
+          <button id="btn-clear" type="button" class="bg-[#C62828] text-white text-xs font-bold px-4 py-2 rounded-md hover:bg-red-700">LIMPIAR</button>
           <button id="btn-add" type="button" class="bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-md hover:bg-blue-800">+ Agregar Unidad</button>
           <button id="btn-export" type="button" onclick="exportarExcelTOP()" class="bg-green-700 text-white text-xs font-bold px-4 py-2 rounded-md hover:bg-green-800">Exportar a Excel</button>
         </div>
@@ -181,6 +181,7 @@ let database = {};
 let editId = null;
 let deleteId = null;
 let filtroEstatus = null;
+let confirmAction = null;
 
 function setFiltro(estatus){
   filtroEstatus = (filtroEstatus === estatus) ? null : estatus;
@@ -290,6 +291,7 @@ function updateDashboard(){
 
 window.eliminarFila = function(id){
   deleteId = id;
+  confirmAction = 'delete';
   document.getElementById('confirm-text').textContent = "¿Eliminar esta unidad?";
   const m = document.getElementById('confirm-modal');
   m.classList.remove('hidden'); m.classList.add('flex');
@@ -315,18 +317,35 @@ window.editarFila = function(id){
 
 document.getElementById('btn-confirm-no').addEventListener('click', ()=>{
   deleteId = null;
+  confirmAction = null;
   const m = document.getElementById('confirm-modal');
   m.classList.add('hidden'); m.classList.remove('flex');
 });
 
 document.getElementById('btn-confirm-yes').addEventListener('click', async ()=>{
-  if(deleteId){
+  if(confirmAction === 'delete' && deleteId){
     await fetch(`${FIREBASE_ITEM}${deleteId}.json`, { method: 'DELETE' });
     deleteId = null;
     cargarFirebase();
+  } else if(confirmAction === 'clearAll'){
+    await fetch(FIREBASE_URL, { method: 'DELETE' });
+    database = {};
+    filtroEstatus = null;
+    document.getElementById('search-input').value = '';
+    updateDashboard();
   }
+  confirmAction = null;
   const m = document.getElementById('confirm-modal');
   m.classList.add('hidden'); m.classList.remove('flex');
+});
+
+document.getElementById('btn-clear').addEventListener('click', function(e){
+  e.preventDefault();
+  if(Object.keys(database).length === 0) return alert('No hay unidades para eliminar');
+  confirmAction = 'clearAll';
+  document.getElementById('confirm-text').textContent = "¿Eliminar TODAS las unidades? Esta acción no se puede deshacer.";
+  const m = document.getElementById('confirm-modal');
+  m.classList.remove('hidden'); m.classList.add('flex');
 });
 
 document.getElementById('btn-add').addEventListener('click', ()=>{
