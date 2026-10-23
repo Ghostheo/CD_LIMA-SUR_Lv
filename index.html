@@ -95,9 +95,12 @@
             <th class="text-left p-2 font-bold">N° TRANS.</th>
             <th class="text-left p-2 font-bold">PROCEDENCIA</th>
             <th class="text-left p-2 font-bold">TIPO</th>
-            <th class="text-left p-2 font-bold">HORA DE LLEGADA</th>
+            <th class="text-left p-2 font-bold">H. DE LLEGADA</th>
+            <th class="text-left p-2 font-bold">H. VALIDACION</th>
+            <th class="text-left p-2 font-bold">HORA DE FIN</th>
             <th class="text-left p-2 font-bold">ESTATUS</th>
             <th class="text-left p-2 font-bold">ACCIONES</th>
+            <th class="text-left p-2 font-bold">TIEMPO</th>
           </tr>
         </thead>
         <tbody id="tabla-body"></tbody>
@@ -121,7 +124,18 @@
         <option>Traslado</option>
         <option>Rece/Desp</option>
       </select>
-      <input id="f-hora" type="time" class="border rounded-md px-3 py-2 text-xs">
+      <div>
+        <label class="text-[10px] font-bold text-gray-500">H. DE LLEGADA</label>
+        <input id="f-hora" type="time" class="border rounded-md px-3 py-2 text-xs w-full">
+      </div>
+      <div>
+        <label class="text-[10px] font-bold text-gray-500">H. VALIDACION</label>
+        <input id="f-validacion" type="time" class="border rounded-md px-3 py-2 text-xs w-full">
+      </div>
+      <div>
+        <label class="text-[10px] font-bold text-gray-500">HORA DE FIN</label>
+        <input id="f-horafin" type="time" class="border rounded-md px-3 py-2 text-xs w-full">
+      </div>
       <select id="f-estatus" class="border rounded-md px-3 py-2 text-xs">
         <option>PENDIENTE</option>
         <option>EN PROCESO</option>
@@ -163,13 +177,37 @@ function setFiltro(estatus){
   updateDashboard(true);
 }
 
-function getBadgeTiempo(horaLlegada, estatus){
-  if(estatus === 'ATENDIDO' || estatus === 'CARGADO/FACT.' || estatus === 'NO EN CD'){
-    return `<span class="bg-gray-500 text-white text-[11px] font-bold px-2 py-1 rounded-md">✓ Finalizado</span>`;
+function formatoDuracion(inicioStr, finStr){
+  if(!inicioStr || !finStr) return "";
+  const p1 = inicioStr.split(':');
+  const p2 = finStr.split(':');
+  if(p1.length < 2 || p2.length < 2) return "";
+  const h1 = Number(p1[0]), m1 = Number(p1[1]);
+  const h2 = Number(p2[0]), m2 = Number(p2[1]);
+  if(isNaN(h1) || isNaN(m1) || isNaN(h2) || isNaN(m2)) return "";
+  let diff = (h2*60 + m2) - (h1*60 + m1);
+  if(diff < 0) diff += 24*60;
+  const hh = Math.floor(diff/60);
+  const mm = diff % 60;
+  return hh + ":" + String(mm).padStart(2,'0');
+}
+
+function getTiempoCelda(u){
+  // Si es ATENDIDO y tiene hora de fin, tiempo fijo pausado
+  if(u.estatus === 'ATENDIDO' && u.horaFin){
+    const t = formatoDuracion(u.hora, u.horaFin);
+    if(t) return `<span class="bg-blue-700 text-white text-[11px] font-bold px-2 py-1 rounded-md">${t}</span>`;
   }
-  if(!horaLlegada) return "";
+  // Si tiene hora de fin manual (aunque no sea ATENDIDO), mostrar duración
+  if(u.horaFin && u.hora){
+    const t = formatoDuracion(u.hora, u.horaFin);
+    if(t) return `<span class="bg-blue-700 text-white text-[11px] font-bold px-2 py-1 rounded-md">${t}</span>`;
+  }
+  // En curso: tiempo en vivo desde llegada
+  if(!u.hora) return "";
   const ahora = new Date();
-  const [h,m] = horaLlegada.split(':').map(Number);
+  const [h,m] = u.hora.split(':').map(Number);
+  if(isNaN(h) || isNaN(m)) return "";
   const llegada = new Date();
   llegada.setHours(h,m,0,0);
   let diffMin = Math.floor((ahora - llegada)/60000);
@@ -228,13 +266,15 @@ function updateDashboard(){
       <td class="p-2">${u.trans}</td>
       <td class="p-2">${u.procedencia}</td>
       <td class="p-2 text-green-700 font-bold">${u.tipo}</td>
-      <td class="p-2">${u.hora}</td>
+      <td class="p-2">${u.hora || ''}</td>
+      <td class="p-2">${u.validacion || ''}</td>
+      <td class="p-2">${u.horaFin || ''}</td>
       <td class="p-2"><span class="bg-red-100 text-red-700 text-[10px] font-bold px-2 py-1 rounded-full">${u.estatus}</span></td>
       <td class="p-2 flex gap-1">
         <button onclick="editarFila('${id}')" class="bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-md">Editar</button>
         <button onclick="eliminarFila('${id}')" class="bg-[#C62828] text-white text-[10px] font-bold px-2 py-1 rounded-md">Eliminar</button>
-        ${getBadgeTiempo(u.hora, u.estatus)}
-      </td>`;
+      </td>
+      <td class="p-2">${getTiempoCelda(u)}</td>`;
     tbody.appendChild(tr);
   });
 }
@@ -253,7 +293,9 @@ window.editarFila = function(id){
   document.getElementById('f-trans').value = u.trans;
   document.getElementById('f-proc').value = u.procedencia;
   document.getElementById('f-tipo').value = u.tipo;
-  document.getElementById('f-hora').value = u.hora;
+  document.getElementById('f-hora').value = u.hora || '';
+  document.getElementById('f-validacion').value = u.validacion || '';
+  document.getElementById('f-horafin').value = u.horaFin || '';
   document.getElementById('f-estatus').value = u.estatus;
   document.getElementById('modal-title').textContent = "Editar Unidad";
   const m = document.getElementById('modal');
@@ -279,7 +321,7 @@ document.getElementById('btn-confirm-yes').addEventListener('click', async ()=>{
 document.getElementById('btn-add').addEventListener('click', ()=>{
   editId = null;
   document.getElementById('modal-title').textContent = "Agregar Unidad";
-  ['f-placa','f-trans','f-proc','f-hora'].forEach(id=>document.getElementById(id).value='');
+  ['f-placa','f-trans','f-proc','f-hora','f-validacion','f-horafin'].forEach(id=>document.getElementById(id).value='');
   const m = document.getElementById('modal');
   m.classList.remove('hidden'); m.classList.add('flex');
 });
@@ -296,9 +338,23 @@ document.getElementById('btn-save').addEventListener('click', async ()=>{
     procedencia: document.getElementById('f-proc').value.trim(),
     tipo: document.getElementById('f-tipo').value,
     hora: document.getElementById('f-hora').value,
+    validacion: document.getElementById('f-validacion').value,
+    horaFin: document.getElementById('f-horafin').value,
     estatus: document.getElementById('f-estatus').value
   };
   if(!unidad.placa) return alert('Ingresa la placa');
+
+  // Si se pone ATENDIDO y no hay hora de fin, se pone la hora actual y se pausa el tiempo
+  if(unidad.estatus === 'ATENDIDO' && !unidad.horaFin){
+    const now = new Date();
+    unidad.horaFin = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    document.getElementById('f-horafin').value = unidad.horaFin;
+  }
+
+  // Si estamos editando y no se puso horaFin, mantener la anterior
+  if(editId && !unidad.horaFin && database[editId] && database[editId].horaFin){
+    unidad.horaFin = database[editId].horaFin;
+  }
   
   if(editId){
     await fetch(`${FIREBASE_ITEM}${editId}.json`, { method: 'PATCH', body: JSON.stringify(unidad) });
@@ -356,11 +412,14 @@ window.exportarExcelTOP = async function(){
       {header:'PROCEDENCIA', key:'procedencia', width:30},
       {header:'TIPO', key:'tipo', width:14},
       {header:'HORA LLEGADA', key:'hora', width:16},
+      {header:'H. VALIDACION', key:'validacion', width:16},
+      {header:'HORA DE FIN', key:'horaFin', width:16},
+      {header:'TIEMPO', key:'tiempo', width:12},
       {header:'ESTATUS', key:'estatus', width:18}
     ];
     sheet.pageSetup = {paperSize: 9, orientation:'landscape', fitToPage:true, fitToWidth:1, fitToHeight:0, margins:{left:0.4, right:0.4, top:0.5, bottom:0.5, header:0.3, footer:0.3}};
 
-    sheet.mergeCells('A1:G1');
+    sheet.mergeCells('A1:J1');
     const titulo = sheet.getCell('A1');
     titulo.value = 'CD LIMA SUR - REPORTE DE OPERACIONES';
     titulo.font = {name:'Calibri', size:16, bold:true, color:{argb:'FFFFFFFF'}};
@@ -368,7 +427,7 @@ window.exportarExcelTOP = async function(){
     titulo.alignment = {horizontal:'center', vertical:'middle'};
     sheet.getRow(1).height = 30;
 
-    sheet.mergeCells('A2:G2');
+    sheet.mergeCells('A2:J2');
     const sub = sheet.getCell('A2');
     sub.value = `Fecha: ${new Date().toLocaleDateString('es-PE')} | Total Unidades: ${data.length} | Generado: ${new Date().toLocaleTimeString('es-PE')}`;
     sub.font = {name:'Calibri', size:11, color:{argb:'FF0C2340'}};
@@ -386,6 +445,7 @@ window.exportarExcelTOP = async function(){
     headerRow.eachCell((cell)=>{ cell.border = thinBorder; });
 
     data.forEach((u,i)=>{
+      const tiempo = formatoDuracion(u.hora, u.horaFin);
       const row = sheet.addRow({
         prioridad: i+1,
         placa: u.placa,
@@ -393,6 +453,9 @@ window.exportarExcelTOP = async function(){
         procedencia: u.procedencia,
         tipo: u.tipo,
         hora: u.hora,
+        validacion: u.validacion || '',
+        horaFin: u.horaFin || '',
+        tiempo: tiempo,
         estatus: u.estatus
       });
       row.height = 20;
@@ -416,8 +479,8 @@ window.exportarExcelTOP = async function(){
       row.getCell('procedencia').alignment = {vertical:'middle', horizontal:'left', wrapText:true};
     });
 
-    sheet.autoFilter = {from:'A4', to:'G'+(4+data.length)};
-    const totalRow = sheet.addRow({prioridad:'', placa:'TOTAL', trans:'', procedencia:'', tipo:'', hora:'', estatus: data.length});
+    sheet.autoFilter = {from:'A4', to:'J'+(4+data.length)};
+    const totalRow = sheet.addRow({prioridad:'', placa:'TOTAL', trans:'', procedencia:'', tipo:'', hora:'', validacion:'', horaFin:'', tiempo:'', estatus: data.length});
     totalRow.font = {name:'Calibri', size:12, bold:true, color:{argb:'FFFFFFFF'}};
     totalRow.fill = {type:'pattern', pattern:'solid', fgColor:{argb:NAVY}};
     totalRow.alignment = {horizontal:'center', vertical:'middle'};
