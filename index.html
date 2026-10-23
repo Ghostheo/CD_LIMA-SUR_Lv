@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Status BSF PUNTA HERMOSA</title>
+<title>Status CD LIMA SUR</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 </head>
@@ -12,7 +12,7 @@
 
   <div class="p-4 md:p-6 border-b">
     <img src="logo.png" alt="Lavoro" class="h-10 md:h-12 object-contain mb-2">
-    <h1 class="text-xl md:text-2xl font-bold mt-2">Status BSF PUNTA HERMOSA</h1>
+    <h1 class="text-xl md:text-2xl font-bold mt-2">Status CD LIMA SUR</h1>
     <p id="fecha" class="text-xs text-gray-500 mt-1"></p>
     <p class="text-xs text-green-600 font-bold mt-1">● Sincronizado en vivo</p>
   </div>
@@ -151,8 +151,8 @@
 </div>
 
 <script>
-const FIREBASE_URL = "https://bsf-puntahermosalv-default-rtdb.firebaseio.com/operaciones.json";
-const FIREBASE_ITEM = "https://bsf-puntahermosalv-default-rtdb.firebaseio.com/operaciones/";
+const FIREBASE_URL = "https://cd-lima-sur-lv-default-rtdb.firebaseio.com/operaciones.json";
+const FIREBASE_ITEM = "https://cd-lima-sur-lv-default-rtdb.firebaseio.com/operaciones/";
 
 let database = {};
 let editId = null;
@@ -324,7 +324,7 @@ window.exportarExcelTOP = async function(){
     if(data.length === 0) return alert('No hay datos para exportar');
 
     const workbook = new ExcelJS.Workbook();
-    workbook.creator = 'Lavoro - BSF Punta Hermosa';
+    workbook.creator = 'Lavoro - CD Lima Sur';
 
     const NAVY = 'FF0C2340';
     const statusFill = {
@@ -349,7 +349,7 @@ window.exportarExcelTOP = async function(){
       right:{style:'thin', color:{argb:'FFD5D8DC'}}
     };
 
-    const sheet = workbook.addWorksheet('BSF Punta Hermosa', {views:[{state:'frozen', ySplit:4}]});
+    const sheet = workbook.addWorksheet('CD Lima Sur', {views:[{state:'frozen', ySplit:4}]});
     sheet.columns = [
       {header:'PRIORIDAD', key:'prioridad', width:12},
       {header:'PLACA', key:'placa', width:15},
@@ -363,7 +363,7 @@ window.exportarExcelTOP = async function(){
 
     sheet.mergeCells('A1:G1');
     const titulo = sheet.getCell('A1');
-    titulo.value = 'BSF PUNTA HERMOSA - REPORTE DE OPERACIONES';
+    titulo.value = 'CD LIMA SUR - REPORTE DE OPERACIONES';
     titulo.font = {name:'Calibri', size:16, bold:true, color:{argb:'FFFFFFFF'}};
     titulo.fill = {type:'pattern', pattern:'solid', fgColor:{argb:NAVY}};
     titulo.alignment = {horizontal:'center', vertical:'middle'};
@@ -435,7 +435,7 @@ window.exportarExcelTOP = async function(){
 
     resumen.mergeCells('A1:C1');
     const rTitle = resumen.getCell('A1');
-    rTitle.value = 'RESUMEN DE OPERACIONES - BSF PUNTA HERMOSA';
+    rTitle.value = 'RESUMEN DE OPERACIONES - CD LIMA SUR';
     rTitle.font = {name:'Calibri', size:14, bold:true, color:{argb:'FFFFFFFF'}};
     rTitle.fill = {type:'pattern', pattern:'solid', fgColor:{argb:NAVY}};
     rTitle.alignment = {horizontal:'center', vertical:'middle'};
@@ -509,7 +509,7 @@ window.exportarExcelTOP = async function(){
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `BSF_PUNTA_HERMOSA_${new Date().toISOString().slice(0,10)}.xlsx`;
+    a.download = `CD_LIMA_SUR_${new Date().toISOString().slice(0,10)}.xlsx`;
     document.body.appendChild(a);
     a.click();
     setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
