@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Status BSF PUNTA HERMOSA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+</head>
+<body class="bg-gray-100 p-2 md:p-6">
+<div class="max-w-7xl mx-auto bg-white rounded-xl shadow overflow-hidden">
+
+  <div class="p-4 md:p-6 border-b">
+    <img src="logo.png" alt="Lavoro" class="h-10 md:h-12 object-contain mb-2">
+    <h1 class="text-xl md:text-2xl font-bold mt-2">Status BSF PUNTA HERMOSA</h1>
+    <p id="fecha" class="text-xs text-gray-500 mt-1"></p>
+    <p class="text-xs text-green-600 font-bold mt-1">● Sincronizado en vivo</p>
+  </div>
+
+  <div class="p-4 md:p-6">
+    <p class="text-xs font-bold tracking-widest text-gray-500 mb-2">POR TIPO</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+      <div class="bg-sky-100 rounded-lg p-3 text-center">
+        <p class="text-[11px] font-bold text-sky-700">RECEPCIÓN</p>
+        <p id="tipo-recepcion" class="text-2xl font-bold text-sky-700">0</p>
+      </div>
+      <div class="bg-green-100 rounded-lg p-3 text-center">
+        <p class="text-[11px] font-bold text-green-700">DESPACHO</p>
+        <p id="tipo-despacho" class="text-2xl font-bold text-green-700">0</p>
+      </div>
+      <div class="bg-yellow-100 rounded-lg p-3 text-center">
+        <p class="text-[11px] font-bold text-yellow-700">TRASLADO</p>
+        <p id="tipo-traslado" class="text-2xl font-bold text-yellow-700">0</p>
+      </div>
+      <div class="bg-purple-100 rounded-lg p-3 text-center">
+        <p class="text-[11px] font-bold text-purple-700">RECE/DESP</p>
+        <p id="tipo-rece-desp" class="text-2xl font-bold text-purple-700">0</p>
+      </div>
+    </div>
+
+    <p class="text-xs font-bold tracking-widest text-gray-500 mb-2">POR ESTATUS</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+      <div class="bg-black text-white rounded-lg p-3 text-center">
+        <p class="text-[11px] font-bold">TOTAL</p>
+        <p id="count-total" class="text-2xl font-bold">0</p>
+      </div>
+      <div onclick="setFiltro('PENDIENTE')" class="cursor-pointer bg-[#C62828] text-white rounded-lg p-3 text-center hover:opacity-90">
+        <p class="text-[11px] font-bold">PENDIENTE</p>
+        <p id="count-pendiente" class="text-2xl font-bold">0</p>
+      </div>
+      <div onclick="setFiltro('EN PROCESO')" class="cursor-pointer bg-red-100 rounded-lg p-3 text-center hover:opacity-90">
+        <p class="text-[11px] font-bold text-red-700">EN PROCESO</p>
+        <p id="count-proceso" class="text-2xl font-bold text-red-700">0</p>
+      </div>
+      <div onclick="setFiltro('PEND. FACTURA')" class="cursor-pointer bg-orange-500 text-white rounded-lg p-3 text-center hover:opacity-90">
+        <p class="text-[11px] font-bold">PEND. FACTURA</p>
+        <p id="count-factura" class="text-2xl font-bold">0</p>
+      </div>
+      <div onclick="setFiltro('CARGADO/FACT.')" class="cursor-pointer bg-green-100 rounded-lg p-3 text-center hover:opacity-90">
+        <p class="text-[11px] font-bold text-green-700">CARGADO/FACT.</p>
+        <p id="count-cargado" class="text-2xl font-bold text-green-700">0</p>
+      </div>
+      <div onclick="setFiltro('ATENDIDO')" class="cursor-pointer bg-green-700 text-white rounded-lg p-3 text-center hover:opacity-90">
+        <p class="text-[11px] font-bold">ATENDIDO</p>
+        <p id="count-atendido" class="text-2xl font-bold">0</p>
+      </div>
+      <div onclick="setFiltro('NO EN CD')" class="cursor-pointer bg-gray-200 rounded-lg p-3 text-center hover:opacity-90">
+        <p class="text-[11px] font-bold text-gray-700">NO EN CD</p>
+        <p id="count-noencd" class="text-2xl font-bold text-gray-700">0</p>
+      </div>
+      <div onclick="setFiltro('PERNOCTANDO')" class="cursor-pointer bg-sky-500 text-white rounded-lg p-3 text-center hover:opacity-90">
+        <p class="text-[11px] font-bold">PERNOCTANDO</p>
+        <p id="count-pernoctando" class="text-2xl font-bold">0</p>
+      </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3">
+      <h2 class="font-bold text-sm">PANEL DE CONTROL DE UNIDADES</h2>
+      <div class="flex flex-col md:flex-row gap-2 md:items-center w-full md:w-auto">
+        <input id="search-input" type="text" placeholder="Buscar por placa, N° trans, procedencia..." class="border rounded-md px-3 py-2 text-xs w-full md:w-80">
+        <div class="flex gap-2">
+          <button id="btn-clear" type="button" onclick="if(confirm('¿Limpiar la búsqueda?')){document.getElementById('search-input').value=''; updateDashboard(true);}" class="bg-[#C62828] text-white text-xs font-bold px-4 py-2 rounded-md hover:bg-red-700">LIMPIAR</button>
+          <button id="btn-add" type="button" class="bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-md hover:bg-blue-800">+ Agregar Unidad</button>
+          <button id="btn-export" type="button" onclick="exportarExcelTOP()" class="bg-green-700 text-white text-xs font-bold px-4 py-2 rounded-md hover:bg-green-800">Exportar a Excel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs">
+        <thead>
+          <tr class="bg-gray-50 text-gray-500">
+            <th class="text-left p-2 font-bold">PRIORIDAD</th>
+            <th class="text-left p-2 font-bold">PLACA</th>
+            <th class="text-left p-2 font-bold">N° TRANS.</th>
+            <th class="text-left p-2 font-bold">PROCEDENCIA</th>
+            <th class="text-left p-2 font-bold">TIPO</th>
+            <th class="text-left p-2 font-bold">HORA DE LLEGADA</th>
+            <th class="text-left p-2 font-bold">ESTATUS</th>
+            <th class="text-left p-2 font-bold">ACCIONES</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <img src="almacen.jpg" class="w-full h-48 object-cover">
+  <p class="text-right text-[10px] text-gray-400 italic p-2">Desarrollado por Luis Vallejo - Operaciones Lavoro</p>
+</div>
+
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-xl shadow-xl w-full max-w-lg p-5">
+    <h3 id="modal-title" class="font-bold mb-3">Agregar Unidad</h3>
+    <div class="grid grid-cols-2 gap-3">
+      <input id="f-placa" placeholder="Placa" class="border rounded-md px-3 py-2 text-xs">
+      <input id="f-trans" placeholder="N° Trans" class="border rounded-md px-3 py-2 text-xs">
+      <input id="f-proc" placeholder="Procedencia" class="border rounded-md px-3 py-2 text-xs">
+      <select id="f-tipo" class="border rounded-md px-3 py-2 text-xs">
+        <option>Recepción</option>
+        <option>Despacho</option>
+        <option>Traslado</option>
+        <option>Rece/Desp</option>
+      </select>
+      <input id="f-hora" type="time" class="border rounded-md px-3 py-2 text-xs">
+      <select id="f-estatus" class="border rounded-md px-3 py-2 text-xs">
+        <option>PENDIENTE</option>
+        <option>EN PROCESO</option>
+        <option>PEND. FACTURA</option>
+        <option>CARGADO/FACT.</option>
+        <option>ATENDIDO</option>
+        <option>NO EN CD</option>
+        <option>PERNOCTANDO</option>
+      </select>
+    </div>
+    <div class="flex justify-end gap-2 mt-4">
+      <button id="btn-cancel" type="button" class="bg-gray-200 text-xs font-bold px-4 py-2 rounded-md">Cancelar</button>
+      <button id="btn-save" type="button" class="bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-md">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-[60] p-4">
+  <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-5 text-center">
+    <p id="confirm-text" class="font-bold text-sm mb-4">¿Eliminar esta unidad?</p>
+    <div class="flex justify-center gap-3">
+      <button id="btn-confirm-no" type="button" class="bg-gray-200 text-gray-700 text-xs font-bold px-5 py-2 rounded-md">Cancelar</button>
+      <button id="btn-confirm-yes" type="button" class="bg-[#C62828] text-white text-xs font-bold px-5 py-2 rounded-md">Sí, Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const FIREBASE_URL = "https://bsf-puntahermosalv-default-rtdb.firebaseio.com/operaciones.json";
+const FIREBASE_ITEM = "https://bsf-puntahermosalv-default-rtdb.firebaseio.com/operaciones/";
+
+let database = {};
+let editId = null;
+let deleteId = null;
+let filtroEstatus = null;
+
+function setFiltro(estatus){
+  filtroEstatus = (filtroEstatus === estatus) ? null : estatus;
+  updateDashboard(true);
+}
+
+function getBadgeTiempo(horaLlegada, estatus){
+  if(estatus === 'ATENDIDO' || estatus === 'CARGADO/FACT.' || estatus === 'NO EN CD'){
+    return `<span class="bg-gray-500 text-white text-[11px] font-bold px-2 py-1 rounded-md">✓ Finalizado</span>`;
+  }
+  if(!horaLlegada) return "";
+  const ahora = new Date();
+  const [h,m] = horaLlegada.split(':').map(Number);
+  const llegada = new Date();
+  llegada.setHours(h,m,0,0);
+  let diffMin = Math.floor((ahora - llegada)/60000);
+  if(diffMin < 0) diffMin += 24*60;
+  const hh = String(Math.floor(diffMin/60)).padStart(2,'0');
+  const mm = String(diffMin%60).padStart(2,'0');
+  const ss = String(ahora.getSeconds()).padStart(2,'0');
+  const tiempo = `${hh}:${mm}:${ss}`;
+  if(diffMin >= 120) return `<span class="bg-red-600 text-white text-[11px] font-bold px-2 py-1 rounded-md animate-pulse">⏱ ${tiempo}</span>`;
+  if(diffMin >= 60) return `<span class="bg-orange-500 text-white text-[11px] font-bold px-2 py-1 rounded-md">⏱ ${tiempo}</span>`;
+  return `<span class="bg-green-600 text-white text-[11px] font-bold px-2 py-1 rounded-md">⏱ ${tiempo}</span>`;
+}
+
+async function cargarFirebase(){
+  try {
+    const res = await fetch(FIREBASE_URL + "?t=" + Date.now());
+    const data = await res.json();
+    database = data || {};
+    updateDashboard(true);
+  } catch(e){ console.error("Error Firebase:", e); }
+}
+
+function updateDashboard(){
+  const hoy = new Date();
+  document.getElementById('fecha').textContent = hoy.toLocaleDateString('es-PE', {day:'numeric', month:'long', year:'numeric'}) + ' | ' + hoy.toLocaleTimeString('es-PE', {hour:'2-digit', minute:'2-digit'});
+  
+  const search = document.getElementById('search-input').value.toLowerCase();
+  let entries = Object.entries(database);
+  const allValues = Object.values(database);
+
+  if(filtroEstatus){ entries = entries.filter(([id,u]) => u.estatus === filtroEstatus); }
+  if(search){ entries = entries.filter(([id,u]) => (u.placa+u.trans+u.procedencia).toLowerCase().includes(search)); }
+
+  document.getElementById('count-total').textContent = allValues.length;
+  document.getElementById('count-pendiente').textContent = allValues.filter(u=>u.estatus==='PENDIENTE').length;
+  document.getElementById('count-proceso').textContent = allValues.filter(u=>u.estatus==='EN PROCESO').length;
+  document.getElementById('count-factura').textContent = allValues.filter(u=>u.estatus==='PEND. FACTURA').length;
+  document.getElementById('count-cargado').textContent = allValues.filter(u=>u.estatus==='CARGADO/FACT.').length;
+  document.getElementById('count-atendido').textContent = allValues.filter(u=>u.estatus==='ATENDIDO').length;
+  document.getElementById('count-noencd').textContent = allValues.filter(u=>u.estatus==='NO EN CD').length;
+  document.getElementById('count-pernoctando').textContent = allValues.filter(u=>u.estatus==='PERNOCTANDO').length;
+  document.getElementById('tipo-recepcion').textContent = allValues.filter(u=>u.tipo==='Recepción').length;
+  document.getElementById('tipo-despacho').textContent = allValues.filter(u=>u.tipo==='Despacho').length;
+  document.getElementById('tipo-traslado').textContent = allValues.filter(u=>u.tipo==='Traslado').length;
+  document.getElementById('tipo-rece-desp').textContent = allValues.filter(u=>u.tipo==='Rece/Desp').length;
+
+  const tbody = document.getElementById('tabla-body');
+  tbody.innerHTML = '';
+  let contador = 1;
+  entries.forEach(([id, u]) => {
+    const tr = document.createElement('tr');
+    tr.className = 'border-t';
+    tr.innerHTML = `
+      <td class="p-2">${contador++}</td>
+      <td class="p-2 font-bold">${u.placa}</td>
+      <td class="p-2">${u.trans}</td>
+      <td class="p-2">${u.procedencia}</td>
+      <td class="p-2 text-green-700 font-bold">${u.tipo}</td>
+      <td class="p-2">${u.hora}</td>
+      <td class="p-2"><span class="bg-red-100 text-red-700 text-[10px] font-bold px-2 py-1 rounded-full">${u.estatus}</span></td>
+      <td class="p-2 flex gap-1">
+        <button onclick="editarFila('${id}')" class="bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-md">Editar</button>
+        <button onclick="eliminarFila('${id}')" class="bg-[#C62828] text-white text-[10px] font-bold px-2 py-1 rounded-md">Eliminar</button>
+        ${getBadgeTiempo(u.hora, u.estatus)}
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+window.eliminarFila = function(id){
+  deleteId = id;
+  document.getElementById('confirm-text').textContent = "¿Eliminar esta unidad?";
+  const m = document.getElementById('confirm-modal');
+  m.classList.remove('hidden'); m.classList.add('flex');
+};
+
+window.editarFila = function(id){
+  editId = id;
+  const u = database[id];
+  document.getElementById('f-placa').value = u.placa;
+  document.getElementById('f-trans').value = u.trans;
+  document.getElementById('f-proc').value = u.procedencia;
+  document.getElementById('f-tipo').value = u.tipo;
+  document.getElementById('f-hora').value = u.hora;
+  document.getElementById('f-estatus').value = u.estatus;
+  document.getElementById('modal-title').textContent = "Editar Unidad";
+  const m = document.getElementById('modal');
+  m.classList.remove('hidden'); m.classList.add('flex');
+};
+
+document.getElementById('btn-confirm-no').addEventListener('click', ()=>{
+  deleteId = null;
+  const m = document.getElementById('confirm-modal');
+  m.classList.add('hidden'); m.classList.remove('flex');
+});
+
+document.getElementById('btn-confirm-yes').addEventListener('click', async ()=>{
+  if(deleteId){
+    await fetch(`${FIREBASE_ITEM}${deleteId}.json`, { method: 'DELETE' });
+    deleteId = null;
+    cargarFirebase();
+  }
+  const m = document.getElementById('confirm-modal');
+  m.classList.add('hidden'); m.classList.remove('flex');
+});
+
+document.getElementById('btn-add').addEventListener('click', ()=>{
+  editId = null;
+  document.getElementById('modal-title').textContent = "Agregar Unidad";
+  ['f-placa','f-trans','f-proc','f-hora'].forEach(id=>document.getElementById(id).value='');
+  const m = document.getElementById('modal');
+  m.classList.remove('hidden'); m.classList.add('flex');
+});
+
+document.getElementById('btn-cancel').addEventListener('click', ()=>{
+  const m = document.getElementById('modal');
+  m.classList.add('hidden'); m.classList.remove('flex');
+});
+
+document.getElementById('btn-save').addEventListener('click', async ()=>{
+  const unidad = {
+    placa: document.getElementById('f-placa').value.trim(),
+    trans: document.getElementById('f-trans').value.trim(),
+    procedencia: document.getElementById('f-proc').value.trim(),
+    tipo: document.getElementById('f-tipo').value,
+    hora: document.getElementById('f-hora').value,
+    estatus: document.getElementById('f-estatus').value
+  };
+  if(!unidad.placa) return alert('Ingresa la placa');
+  
+  if(editId){
+    await fetch(`${FIREBASE_ITEM}${editId}.json`, { method: 'PATCH', body: JSON.stringify(unidad) });
+  } else {
+    await fetch(FIREBASE_URL, { method: 'POST', body: JSON.stringify(unidad) });
+  }
+  const m = document.getElementById('modal');
+  m.classList.add('hidden'); m.classList.remove('flex');
+  cargarFirebase();
+});
+
+document.getElementById('search-input').addEventListener('input', ()=> updateDashboard(true));
+
+// EXPORTAR EXCEL CORREGIDO
+window.exportarExcelTOP = async function(){
+  try {
+    if(typeof ExcelJS === 'undefined'){
+      alert('No se cargó ExcelJS, recarga la página');
+      return;
+    }
+    const data = Object.values(database);
+    if(data.length === 0) return alert('No hay datos para exportar');
+
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = 'Lavoro - BSF Punta Hermosa';
+
+    const NAVY = 'FF0C2340';
+    const statusFill = {
+      'PENDIENTE': 'FFC62828',
+      'EN PROCESO': 'FFE65100',
+      'PEND. FACTURA': 'FFF57C00',
+      'CARGADO/FACT.': 'FF2E7D32',
+      'ATENDIDO': 'FF1B5E20',
+      'NO EN CD': 'FF616161',
+      'PERNOCTANDO': 'FF0277BD'
+    };
+    const tipoFont = {
+      'Recepción': 'FF0288D1',
+      'Despacho': 'FF2E7D32',
+      'Traslado': 'FFF9A825',
+      'Rece/Desp': 'FF7B1FA2'
+    };
+    const thinBorder = {
+      top:{style:'thin', color:{argb:'FFD5D8DC'}},
+      bottom:{style:'thin', color:{argb:'FFD5D8DC'}},
+      left:{style:'thin', color:{argb:'FFD5D8DC'}},
+      right:{style:'thin', color:{argb:'FFD5D8DC'}}
+    };
+
+    const sheet = workbook.addWorksheet('BSF Punta Hermosa', {views:[{state:'frozen', ySplit:4}]});
+    sheet.columns = [
+      {header:'PRIORIDAD', key:'prioridad', width:12},
+      {header:'PLACA', key:'placa', width:15},
+      {header:'N° TRANS.', key:'trans', width:15},
+      {header:'PROCEDENCIA', key:'procedencia', width:30},
+      {header:'TIPO', key:'tipo', width:14},
+      {header:'HORA LLEGADA', key:'hora', width:16},
+      {header:'ESTATUS', key:'estatus', width:18}
+    ];
+    sheet.pageSetup = {paperSize: 9, orientation:'landscape', fitToPage:true, fitToWidth:1, fitToHeight:0, margins:{left:0.4, right:0.4, top:0.5, bottom:0.5, header:0.3, footer:0.3}};
+
+    sheet.mergeCells('A1:G1');
+    const titulo = sheet.getCell('A1');
+    titulo.value = 'BSF PUNTA HERMOSA - REPORTE DE OPERACIONES';
+    titulo.font = {name:'Calibri', size:16, bold:true, color:{argb:'FFFFFFFF'}};
+    titulo.fill = {type:'pattern', pattern:'solid', fgColor:{argb:NAVY}};
+    titulo.alignment = {horizontal:'center', vertical:'middle'};
+    sheet.getRow(1).height = 30;
+
+    sheet.mergeCells('A2:G2');
+    const sub = sheet.getCell('A2');
+    sub.value = `Fecha: ${new Date().toLocaleDateString('es-PE')} | Total Unidades: ${data.length} | Generado: ${new Date().toLocaleTimeString('es-PE')}`;
+    sub.font = {name:'Calibri', size:11, color:{argb:'FF0C2340'}};
+    sub.fill = {type:'pattern', pattern:'solid', fgColor:{argb:'FFEBF5FB'}};
+    sub.alignment = {horizontal:'center', vertical:'middle'};
+    sheet.getRow(2).height = 20;
+
+    sheet.getRow(3).height = 5;
+
+    const headerRow = sheet.getRow(4);
+    headerRow.font = {name:'Calibri', size:12, bold:true, color:{argb:'FFFFFFFF'}};
+    headerRow.fill = {type:'pattern', pattern:'solid', fgColor:{argb:NAVY}};
+    headerRow.alignment = {horizontal:'center', vertical:'middle'};
+    headerRow.height = 22;
+    headerRow.eachCell((cell)=>{ cell.border = thinBorder; });
+
+    data.forEach((u,i)=>{
+      const row = sheet.addRow({
+        prioridad: i+1,
+        placa: u.placa,
+        trans: u.trans,
+        procedencia: u.procedencia,
+        tipo: u.tipo,
+        hora: u.hora,
+        estatus: u.estatus
+      });
+      row.height = 20;
+      row.eachCell({includeEmpty:true}, (cell, colNumber)=>{
+        cell.font = {name:'Calibri', size:11};
+        cell.border = thinBorder;
+        cell.alignment = {vertical:'middle', horizontal: colNumber===1 ? 'center' : 'left'};
+        if(i%2===1) cell.fill = {type:'pattern', pattern:'solid', fgColor:{argb:'FFF5F7FA'}};
+      });
+      const estCell = row.getCell('estatus');
+      if(statusFill[u.estatus]){
+        estCell.fill = {type:'pattern', pattern:'solid', fgColor:{argb:statusFill[u.estatus]}};
+        estCell.font = {name:'Calibri', size:11, bold:true, color:{argb:'FFFFFFFF'}};
+        estCell.alignment = {horizontal:'center', vertical:'middle'};
+      }
+      const tipoCell = row.getCell('tipo');
+      if(tipoFont[u.tipo]){
+        tipoCell.font = {name:'Calibri', size:11, bold:true, color:{argb:tipoFont[u.tipo]}};
+      }
+      row.getCell('placa').font = {name:'Calibri', size:11, bold:true};
+      row.getCell('procedencia').alignment = {vertical:'middle', horizontal:'left', wrapText:true};
+    });
+
+    sheet.autoFilter = {from:'A4', to:'G'+(4+data.length)};
+    const totalRow = sheet.addRow({prioridad:'', placa:'TOTAL', trans:'', procedencia:'', tipo:'', hora:'', estatus: data.length});
+    totalRow.font = {name:'Calibri', size:12, bold:true, color:{argb:'FFFFFFFF'}};
+    totalRow.fill = {type:'pattern', pattern:'solid', fgColor:{argb:NAVY}};
+    totalRow.alignment = {horizontal:'center', vertical:'middle'};
+    totalRow.eachCell({includeEmpty:true}, (cell)=>{ cell.border = thinBorder; });
+    sheet.getRow(4+data.length+1).height = 22;
+
+    const resumen = workbook.addWorksheet('Resumen', {views:[{state:'frozen', ySplit:4}]});
+    resumen.columns = [
+      {header:'ESTATUS', key:'estatus', width:24},
+      {header:'CANTIDAD', key:'cantidad', width:14},
+      {header:'% PARTICIPACION', key:'porcentaje', width:18}
+    ];
+    resumen.pageSetup = {paperSize: 9, orientation:'portrait', fitToPage:true, fitToWidth:1, fitToHeight:1, margins:{left:0.5, right:0.5, top:0.5, bottom:0.5, header:0.3, footer:0.3}};
+
+    resumen.mergeCells('A1:C1');
+    const rTitle = resumen.getCell('A1');
+    rTitle.value = 'RESUMEN DE OPERACIONES - BSF PUNTA HERMOSA';
+    rTitle.font = {name:'Calibri', size:14, bold:true, color:{argb:'FFFFFFFF'}};
+    rTitle.fill = {type:'pattern', pattern:'solid', fgColor:{argb:NAVY}};
+    rTitle.alignment = {horizontal:'center', vertical:'middle'};
+    resumen.getRow(1).height = 28;
+
+    resumen.mergeCells('A2:C2');
+    resumen.getCell('A2').value = `Fecha: ${new Date().toLocaleDateString('es-PE')} | Empresa: Operaciones Lavoro`;
+    resumen.getCell('A2').alignment = {horizontal:'center', vertical:'middle'};
+    resumen.getCell('A2').font = {size:11, italic:true};
+    resumen.getRow(2).height = 18;
+
+    resumen.getRow(3).height = 5;
+
+    const resumenHeader = resumen.getRow(4);
+    resumenHeader.font = {name:'Calibri', size:12, bold:true, color:{argb:'FFFFFFFF'}};
+    resumenHeader.fill = {type:'pattern', pattern:'solid', fgColor:{argb:NAVY}};
+    resumenHeader.alignment = {horizontal:'center', vertical:'middle'};
+    resumenHeader.height = 22;
+    resumenHeader.eachCell({includeEmpty:true}, (cell)=>{ cell.border = thinBorder; });
+
+    const estatusList = ['TOTAL','PENDIENTE','EN PROCESO','PEND. FACTURA','CARGADO/FACT.','ATENDIDO','NO EN CD','PERNOCTANDO'];
+    estatusList.forEach((est)=>{
+      const cant = est==='TOTAL' ? data.length : data.filter(u=>u.estatus===est).length;
+      const pct = data.length ? ((cant/data.length)*100).toFixed(1)+'%' : '0%';
+      const r = resumen.addRow({estatus:est, cantidad:cant, porcentaje:pct});
+      r.height = 20;
+      r.eachCell({includeEmpty:true}, (cell)=>{
+        cell.border = thinBorder;
+        cell.font = {name:'Calibri', size:11};
+        cell.alignment = {vertical:'middle', horizontal:'center'};
+      });
+      r.getCell('estatus').alignment = {vertical:'middle', horizontal:'left'};
+      if(est!=='TOTAL' && statusFill[est]){
+        r.getCell('estatus').fill = {type:'pattern', pattern:'solid', fgColor:{argb:statusFill[est]}};
+        r.getCell('estatus').font = {name:'Calibri', size:11, bold:true, color:{argb:'FFFFFFFF'}};
+      }
+      if(est==='TOTAL'){
+        r.font = {name:'Calibri', size:11, bold:true};
+        r.fill = {type:'pattern', pattern:'solid', fgColor:{argb:'FFEBF5FB'}};
+      }
+    });
+
+    resumen.addRow({});
+    const tipoTitleRow = resumen.addRow({estatus:'RESUMEN POR TIPO', cantidad:'', porcentaje:''});
+    tipoTitleRow.font = {name:'Calibri', size:12, bold:true, color:{argb:'FFFFFFFF'}};
+    tipoTitleRow.fill = {type:'pattern', pattern:'solid', fgColor:{argb:NAVY}};
+    tipoTitleRow.alignment = {horizontal:'center', vertical:'middle'};
+    tipoTitleRow.height = 22;
+    tipoTitleRow.eachCell({includeEmpty:true}, (cell)=>{ cell.border = thinBorder; });
+
+    ['Recepción','Despacho','Traslado','Rece/Desp'].forEach(t=>{
+      const cant = data.filter(u=>u.tipo===t).length;
+      const pct = data.length ? ((cant/data.length)*100).toFixed(1)+'%' : '0%';
+      const r = resumen.addRow({estatus:t, cantidad:cant, porcentaje:pct});
+      r.height = 20;
+      r.eachCell({includeEmpty:true}, (cell)=>{
+        cell.border = thinBorder;
+        cell.font = {name:'Calibri', size:11};
+        cell.alignment = {vertical:'middle', horizontal:'center'};
+      });
+      r.getCell('estatus').alignment = {vertical:'middle', horizontal:'left'};
+    });
+
+    const footerRow = resumen.addRow({estatus:'Desarrollado por Luis Vallejo - Operaciones Lavoro', cantidad:'', porcentaje:''});
+    resumen.mergeCells(`A${footerRow.number}:C${footerRow.number}`);
+    footerRow.getCell('estatus').font = {name:'Calibri', size:9, italic:true, color:{argb:'FF808080'}};
+    footerRow.alignment = {horizontal:'center'};
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `BSF_PUNTA_HERMOSA_${new Date().toISOString().slice(0,10)}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+
+  } catch(err){
+    console.error(err);
+    alert('Error al exportar: ' + err.message);
+  }
+};
+
+cargarFirebase();
+setInterval(cargarFirebase, 3000);
+updateDashboard();
+</script>
+</body>
+</html>
