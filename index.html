@@ -2,15 +2,15 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Status CD LIMA SUR v99 ENMARCADO</title>
+<title>Status CD LIMA SUR</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <style>
-body{font-family:Inter,sans-serif;background:#f8fafc}
-.th-yellow{background:#facc15;color:#000;font-size:10px;padding:8px 6px;white-space:nowrap;position:sticky;top:0;z-index:2;border:1px solid #000}
-.th-blue{background:#8ea9db;color:#000;font-size:10px;padding:6px;border:1px solid #000;text-align:center}
+body{font-family:Inter,sans-serif;background:#f1f5f9}
+.th-yellow{background:#facc15;color:#000;font-size:10px;padding:8px 6px;white-space:nowrap;position:sticky;top:0;z-index:2;border:1px solid #000;font-weight:bold}
+.th-blue{background:#8ea9db;color:#000;font-size:10px;padding:6px;border:1px solid #000;text-align:center;font-weight:bold}
 .th-black{background:#000;color:#fff;font-size:10px;padding:6px;border:1px solid #000;text-align:center}
 .th-gray{background:#d9d9d9;color:#000;font-size:10px;padding:6px;border:1px solid #000;text-align:center}
 .td{font-size:11px;padding:6px;border:1px solid #000;white-space:nowrap;background:#fff}
@@ -19,47 +19,79 @@ body{font-family:Inter,sans-serif;background:#f8fafc}
 .filter-input{width:100%;font-size:10px;padding:3px;border:1px solid #000;text-align:center}
 .tab-active{background:#0a3a8a;color:#fff}
 .tab-inactive{background:#e5e7eb;color:#000}
-.card{border:2px solid #000}
+.card-bordered{border:2px solid #000}
+.lavoro{color:#0a4a8a;font-weight:900;font-size:24px;letter-spacing:-1px}
+.lavoro span{color:#e11d48}
+.card-por-tipo{border:1px solid #e5e7eb;border-radius:10px;padding:14px;text-align:center}
 </style>
 </head>
-<body class="p-3">
-<div class="bg-white rounded-xl shadow p-4 flex justify-between items-center mb-3 card">
-<div><h1 class="text-xl font-black">Status CD LIMA SUR v99 ENMARCADO</h1><p id="fechaHeader" class="text-[11px] text-gray-500"></p><p class="text-[11px] text-green-600 font-bold">● v99 - DATA es la madre - Corregido hora real 09:40</p></div>
-<div class="flex gap-2 border-2 border-red-600 p-2 rounded-lg bg-white">
-<button onclick="abrirAdminPass()" type="button" class="border-2 border-gray-800 rounded-xl px-4 py-2 text-[13px] font-bold bg-white">🔒 ADMIN DASHBOARD</button>
-<button onclick="guardarDia()" type="button" class="bg-green-600 text-white rounded-xl px-5 py-2 text-[13px] font-bold border border-black">📥 GUARDAR DÍA → DATA</button>
-</div>
-</div>
+<body class="p-4">
 
-<div class="bg-white rounded-xl shadow p-3 mb-3 card">
-<div class="grid grid-cols-4 gap-3">
-<div class="bg-blue-50 rounded-xl p-3 text-center font-bold card">RECEPCIÓN<br><span id="cRecep" class="text-2xl">1</span></div>
-<div class="bg-black text-white rounded-xl p-3 text-center font-bold card">TOTAL<br><span id="cTotal" class="text-2xl">1</span></div>
-<div class="bg-green-700 text-white rounded-xl p-3 text-center font-bold card">ATENDIDO<br><span id="cAtend" class="text-2xl">1</span></div>
-<div class="bg-red-600 text-white rounded-xl p-3 text-center font-bold card">DATA TOTAL<br><span id="cDataTotal" class="text-2xl">0</span></div>
+<!-- HEADER COMO PUNTA HERMOSA PERO ENMARCADO -->
+<div class="bg-white rounded-xl shadow p-5 mb-4 card-bordered">
+<div class="flex justify-between items-start">
+<div>
+<div class="lavoro">Lav<span>o</span>ro</div>
+<h1 class="text-[22px] font-bold mt-2">Status CD LIMA SUR</h1>
+<p id="fechaHeader" class="text-[12px] text-gray-500 mt-1"></p>
+<p class="text-[11px] text-green-700">En línea - Actualizado</p>
 </div>
-</div>
-
-<div class="bg-white rounded-xl shadow p-3 card">
-<div class="flex justify-between mb-2 flex-wrap gap-2">
-<h2 class="font-bold text-[11px] border border-black px-2 py-1 bg-white">PANEL DE CONTROL DE UNIDADES - DÍA ACTUAL</h2>
 <div class="flex gap-2">
-<input id="buscador" placeholder="Buscar placa..." class="border border-black text-[11px] px-3 py-1 rounded w-64">
-<button onclick="limpiarTodo()" type="button" class="bg-red-600 text-white text-[10px] px-3 py-1.5 rounded font-bold border border-black">LIMPIAR</button>
-<button onclick="abrirModalAgregar()" type="button" class="bg-blue-700 text-white text-[10px] px-3 py-1.5 rounded font-bold border border-black">+ Agregar Unidad</button>
-<button onclick="exportarExcel()" type="button" class="bg-green-700 text-white text-[10px] px-3 py-1.5 rounded font-bold border border-black">Exportar a Excel</button>
+<button onclick="abrirAdminPass()" type="button" class="bg-white border-2 border-black rounded-xl px-5 py-2.5 text-[13px] font-bold shadow">🔒 ADMIN DASHBOARD</button>
+<button onclick="guardarDia()" type="button" class="bg-green-600 text-white border-2 border-black rounded-xl px-5 py-2.5 text-[13px] font-bold shadow">📥 GUARDAR DÍA → DATA</button>
 </div>
 </div>
-<div class="overflow-x-auto max-h-[500px] overflow-y-auto border-2 border-black">
+</div>
+
+<!-- POR TIPO COMO REFERENCIA + ENMARCADO -->
+<div class="bg-white rounded-xl shadow p-5 mb-4 card-bordered">
+<p class="text-[11px] tracking-widest text-gray-500 mb-3">POR TIPO</p>
+<div class="grid grid-cols-4 gap-3">
+<div class="card-por-tipo bg-blue-50 card-bordered"><div class="text-[11px] text-blue-600">RECEPCIÓN</div><div id="cRecep" class="text-2xl text-blue-700 mt-1">1</div></div>
+<div class="card-por-tipo bg-green-50 card-bordered"><div class="text-[11px] text-green-700">DESPACHO</div><div id="cDesp" class="text-2xl text-green-700 mt-1">0</div></div>
+<div class="card-por-tipo bg-yellow-100 card-bordered"><div class="text-[11px] text-yellow-700">TRASLADO</div><div id="cTras" class="text-2xl text-yellow-700 mt-1">0</div></div>
+<div class="card-por-tipo bg-purple-100 card-bordered"><div class="text-[11px] text-purple-700">RECE/DESP</div><div id="cReceDesp" class="text-2xl text-purple-700 mt-1">0</div></div>
+</div>
+
+<p class="text-[11px] tracking-widest text-gray-500 mt-6 mb-3">POR ESTATUS</p>
+<div class="grid grid-cols-4 gap-3">
+<div class="bg-black text-white rounded-lg p-4 text-center card-bordered"><div class="text-[11px]">TOTAL</div><div id="cTotal" class="text-2xl mt-1">1</div></div>
+<div class="bg-red-600 text-white rounded-lg p-4 text-center card-bordered"><div class="text-[11px]">PENDIENTE</div><div id="cPend" class="text-2xl mt-1">0</div></div>
+<div class="bg-red-100 rounded-lg p-4 text-center card-bordered"><div class="text-[11px] text-red-700">EN PROCESO</div><div id="cProc" class="text-2xl text-red-600 mt-1">0</div></div>
+<div class="bg-orange-500 text-white rounded-lg p-4 text-center card-bordered"><div class="text-[11px]">PEND. FACTURA</div><div id="cPendFact" class="text-2xl mt-1">0</div></div>
+<div class="bg-green-100 rounded-lg p-4 text-center card-bordered"><div class="text-[11px] text-green-700">CARGADO/FACT.</div><div id="cCarg" class="text-2xl text-green-700 mt-1">0</div></div>
+<div class="bg-green-700 text-white rounded-lg p-4 text-center card-bordered"><div class="text-[11px]">ATENDIDO</div><div id="cAtend" class="text-2xl mt-1">1</div></div>
+<div class="bg-gray-200 rounded-lg p-4 text-center card-bordered"><div class="text-[11px] text-gray-700">NO EN CD</div><div id="cNoCD" class="text-2xl mt-1">0</div></div>
+<div class="bg-sky-500 text-white rounded-lg p-4 text-center card-bordered"><div class="text-[11px]">PERNOCTANDO</div><div id="cPernoc" class="text-2xl mt-1">0</div></div>
+</div>
+<div class="grid grid-cols-4 gap-3 mt-3">
+<div class="bg-red-600 text-white rounded-lg p-3 text-center card-bordered col-span-1"><div class="text-[11px]">DATA TOTAL</div><div id="cDataTotal" class="text-xl mt-1">0</div></div>
+</div>
+</div>
+
+<!-- PANEL DE CONTROL COMO REFERENCIA PERO FORMATO LIMA SUR ENMARCADO -->
+<div class="bg-white rounded-xl shadow p-5 card-bordered">
+<div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+<h2 class="font-bold text-[13px]">PANEL DE CONTROL DE UNIDADES</h2>
+<div class="flex gap-2 items-center">
+<input id="buscador" placeholder="Buscar por placa, N° trans, procedencia..." class="border border-gray-300 text-[12px] px-4 py-2.5 rounded-lg w-[320px]">
+<button onclick="limpiarTodo()" type="button" class="bg-red-600 text-white text-[12px] px-5 py-2.5 rounded-lg font-bold border border-black">LIMPIAR</button>
+<button onclick="abrirModalAgregar()" type="button" class="bg-blue-700 text-white text-[12px] px-5 py-2.5 rounded-lg font-bold border border-black">+ Agregar Unidad</button>
+<button onclick="exportarExcel()" type="button" class="bg-green-700 text-white text-[12px] px-5 py-2.5 rounded-lg font-bold border border-black">Exportar a Excel</button>
+</div>
+</div>
+<div class="overflow-x-auto max-h-[520px] overflow-y-auto border-2 border-black">
 <table class="w-full"><thead><tr><th class="th-yellow">P</th><th class="th-yellow">TRANSPORTE</th><th class="th-yellow">PLACA</th><th class="th-yellow">PL. TRACTO</th><th class="th-yellow">PL. CARRETA</th><th class="th-yellow">N° PALLETS</th><th class="th-yellow">TIPO DE PRODUCTO</th><th class="th-yellow">PROCEDENCIA</th><th class="th-yellow">TIPO</th><th class="th-yellow">REPORTE EN GARITA</th><th class="th-yellow">INICIO DESCARGA</th><th class="th-yellow">FIN DESCARGA</th><th class="th-yellow">FIN VERIF GR</th><th class="th-yellow">SALIDA CD</th><th class="th-yellow">INGRESO GR/SAP</th><th class="th-yellow">STATUS</th><th class="th-yellow">ACCIONES</th><th class="th-yellow">TAT</th></tr></thead>
-<tbody id="tbodyPrincipal"><tr><td class="td">1</td><td class="td">14319153</td><td class="td font-bold">A1Q159/DV1943</td><td class="td">A1Q159</td><td class="td">DV1943</td><td class="td">31</td><td class="td">ABARROTES</td><td class="td">HUACHIPA</td><td class="td">Recepción</td><td class="td">09:40</td><td class="td">10:47</td><td class="td">10:50</td><td class="td">11:10</td><td class="td font-bold">10:56</td><td class="td">11:00</td><td class="td">ATENDIDO</td><td class="td"><button onclick="editarFila(this)" class="bg-orange-200 text-[9px] px-2 py-1 rounded mr-1 border border-black">Editar</button><button onclick="eliminarFila(this)" class="bg-red-600 text-white text-[9px] px-2 py-1 rounded border border-black">Eliminar</button></td><td class="td">1:16</td></tr></tbody>
+<tbody id="tbodyPrincipal"><tr><td class="td">1</td><td class="td">14319153</td><td class="td font-bold">A1Q159/DV1943</td><td class="td">A1Q159</td><td class="td">DV1943</td><td class="td">31</td><td class="td">ABARROTES</td><td class="td">HUACHIPA</td><td class="td">Recepción</td><td class="td">09:40</td><td class="td">10:47</td><td class="td">10:50</td><td class="td">11:10</td><td class="td font-bold">10:56</td><td class="td">11:00</td><td class="td">ATENDIDO</td><td class="td"><button onclick="editarFila(this)" class="bg-orange-400 text-white text-[9px] px-2 py-1 rounded mr-1 border border-black">Editar</button><button onclick="eliminarFila(this)" class="bg-red-600 text-white text-[9px] px-2 py-1 rounded border border-black">Eliminar</button></td><td class="td">1:16</td></tr></tbody>
 </table>
 </div>
 </div>
 
+<!-- MODAL AGREGAR -->
 <div id="modalAgregar" class="fixed inset-0 modal-bg hidden z-50 flex items-center justify-center p-4"><div class="bg-white rounded-xl max-w-3xl w-full p-5 max-h-[90vh] overflow-y-auto border-2 border-black"><div class="flex justify-between mb-4"><h3 id="tituloModal" class="font-black border border-black px-2">+ AGREGAR UNIDAD</h3><button onclick="cerrarModalAgregar()" class="bg-black text-white px-3 rounded">X</button></div><div class="grid grid-cols-2 gap-3 text-[12px]"><label>TRANSPORTE<input id="fTransporte" class="border border-black p-2 rounded w-full"></label><label>N° PALLETS<input id="fPallets" type="number" class="border border-black p-2 rounded w-full"></label><label class="font-bold">PL. TRACTO<input id="fTracto" class="border-2 border-blue-600 p-2 rounded w-full bg-yellow-50"></label><label class="font-bold">PL. CARRETA<input id="fCarreta" class="border-2 border-blue-600 p-2 rounded w-full bg-yellow-50"></label><label>TIPO PRODUCTO<input id="fTipoProd" value="ABARROTES" class="border border-black p-2 rounded w-full"></label><label>PROCEDENCIA<input id="fProc" value="HUACHIPA" class="border border-black p-2 rounded w-full"></label><label>REPORTE GARITA<input id="fGarita" type="time" class="border border-black p-2 rounded w-full bg-orange-100"></label><label>SALIDA CD<input id="fSalida" type="time" class="border border-black p-2 rounded w-full"></label><label>INICIO DESCARGA<input id="fInicio" type="time" class="border border-black p-2 rounded w-full"></label><label>FIN DESCARGA<input id="fFin" type="time" class="border border-black p-2 rounded w-full"></label><label>FIN VERIF<input id="fVerif" type="time" class="border border-black p-2 rounded w-full"></label><label>INGRESO SAP<input id="fIngreso" type="time" class="border border-black p-2 rounded w-full"></label><label>TIPO<select id="fTipo" class="border border-black p-2 rounded w-full"><option>Recepción</option><option>Despacho</option></select></label><label>STATUS<select id="fStatus" class="border border-black p-2 rounded w-full"><option>ATENDIDO</option><option>PENDIENTE</option><option>EN PROCESO</option></select></label></div><button onclick="guardarNuevaUnidad()" class="mt-5 bg-blue-700 text-white w-full py-3 rounded-xl font-black border border-black">GUARDAR</button></div></div>
 
-<div id="modalAdmin" class="fixed inset-0 modal-bg hidden z-50 p-2 overflow-y-auto"><div class="bg-white rounded-xl max-w-[1600px] mx-auto p-3 border-2 border-black"><div class="flex justify-between items-center mb-3"><h2 class="font-black text-[14px] border border-black px-2 bg-white">ADMIN DASHBOARD v99 - 3 VENTANAS CON FILTRO Y ENMARCADO</h2><button onclick="cerrarAdmin()" class="bg-black text-white px-4 py-1 rounded border border-black">X Cerrar</button></div>
+<!-- ADMIN CON 3 VENTANAS ENMARCADAS -->
+<div id="modalAdmin" class="fixed inset-0 modal-bg hidden z-50 p-2 overflow-y-auto"><div class="bg-white rounded-xl max-w-[1600px] mx-auto p-3 border-2 border-black"><div class="flex justify-between items-center mb-3"><h2 class="font-black text-[14px] border border-black px-2 bg-white">ADMIN DASHBOARD - DATA Madre + TAT DIARIO + PROM CICLO</h2><button onclick="cerrarAdmin()" class="bg-black text-white px-4 py-1 rounded border border-black">X Cerrar</button></div>
 
 <div class="flex gap-1 mb-3 flex-wrap">
 <button onclick="switchTab('data')" id="tabData" class="tab-active px-4 py-2 text-[12px] font-bold border border-black">1. DATA (MADRE)</button>
@@ -70,26 +102,19 @@ body{font-family:Inter,sans-serif;background:#f8fafc}
 </div>
 
 <div id="ventanaData" class="border-2 border-black bg-white">
-<div class="bg-black text-white text-center font-bold py-1 text-[11px] border border-black">1. REGISTRO TAT ALMACÉN - DATA MADRE - CON FILTROS Y ENMARCADO</div>
-<div class="overflow-auto max-h-[600px]">
-<table class="w-full text-[10px]"><thead>
-<tr><th class="th-black">FECHA</th><th class="th-black">TRANSPORTE</th><th class="th-black">PLACA</th><th class="th-black">PL. TRACTO</th><th class="th-black">PL. CARRETA</th><th class="th-black">TIPO PRODUCTO</th><th class="th-black">PALLETS</th><th class="th-black">GARITA</th><th class="th-black">INICIO</th><th class="th-black">SALIDA</th><th class="th-black">TAT</th></tr>
-<tr><th class="th-gray"><input class="filter-input" id="fDataFecha" onkeyup="filtrarData()" placeholder="Filtrar"></th><th class="th-gray"><input class="filter-input" placeholder="Filtrar"></th><th class="th-gray"><input class="filter-input" placeholder="Filtrar"></th><th class="th-gray"><input class="filter-input" placeholder="Filtrar"></th><th class="th-gray"><input class="filter-input" placeholder="Filtrar"></th><th class="th-gray"><input class="filter-input" placeholder="Filtrar"></th><th class="th-gray"><input class="filter-input" placeholder="Filtrar"></th><th class="th-gray"><input class="filter-input" placeholder="Filtrar"></th><th class="th-gray"><input class="filter-input" placeholder="Filtrar"></th><th class="th-gray"><input class="filter-input" placeholder="Filtrar"></th><th class="th-gray"><input class="filter-input" placeholder="Filtrar"></th></tr>
-</thead><tbody id="tbodyData"></tbody></table>
-</div>
-<div class="bg-yellow-100 border border-black p-2 text-[11px] font-bold" id="totalDataInfo">Total registros: 0</div>
+<div class="bg-black text-white text-center font-bold py-1 text-[11px]">REGISTRO TAT ALMACÉN - DATA MADRE - Con Filtro y Enmarcado</div>
+<div class="overflow-auto max-h-[600px]"><table class="w-full text-[10px]"><thead><tr><th class="th-black">FECHA</th><th class="th-black">TRANSPORTE</th><th class="th-black">PLACA</th><th class="th-black">PL. TRACTO</th><th class="th-black">PL. CARRETA</th><th class="th-black">TIPO PRODUCTO</th><th class="th-black">PALLETS</th><th class="th-black">GARITA</th><th class="th-black">INICIO</th><th class="th-black">SALIDA</th><th class="th-black">TAT</th></tr><tr><th class="th-gray"><input class="filter-input" id="fDataFecha" onkeyup="filtrarData()" placeholder="Filtrar FECHA"></th><th class="th-gray"></th><th class="th-gray"></th><th class="th-gray"><input class="filter-input" placeholder="Filtrar"></th><th class="th-gray"></th><th class="th-gray"><input class="filter-input" placeholder="Filtrar"></th><th class="th-gray"></th><th class="th-gray"></th><th class="th-gray"></th><th class="th-gray"></th></tr></thead><tbody id="tbodyData"></tbody></table></div>
+<div class="bg-yellow-100 border border-black p-2 text-[11px] font-bold" id="totalDataInfo">Total DATA: 0</div>
 </div>
 
 <div id="ventanaTatDiario" class="hidden border-2 border-black bg-white">
-<div class="flex justify-between bg-[#8ea9db] border border-black p-2"><div class="font-bold text-[12px] text-center w-full">2. TAT DIARIO - Jala de DATA - <span id="fechaHoy"></span></div><div class="bg-yellow-200 border border-black text-[10px] px-2 py-1 font-bold">META 01:10:00</div></div>
-<div class="overflow-auto max-h-[300px] border border-black mb-3">
-<table class="w-full text-[10px]"><thead><tr><th class="th-blue">FECHA</th><th class="th-blue">PL. TRACTO</th><th class="th-blue">TIPO PRODUCTO</th><th class="th-blue">H. GARITA</th><th class="th-blue">H. INICIO</th><th class="th-blue">H. SALIDA</th><th class="th-blue">TAT</th></tr></thead><tbody id="tbodyTatDiarioResumen"></tbody></table>
-</div>
+<div class="flex justify-between bg-[#8ea9db] border border-black p-2"><div class="font-bold text-[12px] text-center w-full">TAT RECEPCIONES T1 DIARIO - Jala de DATA - <span id="fechaHoy"></span></div><div class="bg-yellow-200 border border-black text-[10px] px-2 py-1 font-bold">META 01:10:00</div></div>
+<div class="overflow-auto max-h-[300px] border border-black mb-3"><table class="w-full text-[10px]"><thead><tr><th class="th-blue">FECHA</th><th class="th-blue">PL. TRACTO</th><th class="th-blue">TIPO PRODUCTO</th><th class="th-blue">H. GARITA</th><th class="th-blue">H. INICIO</th><th class="th-blue">H. SALIDA</th><th class="th-blue">TAT</th></tr></thead><tbody id="tbodyTatDiarioResumen"></tbody></table></div>
 <div class="border-2 border-black p-2 bg-white"><div class="grid md:grid-cols-3 gap-4"><div class="md:col-span-1 overflow-auto max-h-[350px] border-2 border-black"><table class="w-full text-[10px]"><thead><tr><th class="p-1 border border-black">FECHA</th><th class="p-1 border border-black">TRACTO</th><th class="p-1 border border-black">INGRESO</th><th class="p-1 border border-black">INICIO</th><th class="p-1 border border-black">SALIDA</th><th class="p-1 border border-black">TAT</th></tr></thead><tbody id="tbodyTatDiario"></tbody><tfoot class="bg-gray-200 font-bold"><tr><td class="p-1 border border-black">Total</td><td class="p-1 border border-black"></td><td class="p-1 border border-black" id="detTotalIngreso"></td><td class="p-1 border border-black" id="detTotalInicio"></td><td class="p-1 border border-black" id="detTotalSalida"></td><td class="p-1 border border-black" id="detTotalTat"></td></tr></tfoot></table><div id="promDiario" class="mt-2 text-[11px] font-bold bg-yellow-100 p-2 rounded border border-black"></div></div><div class="md:col-span-2 border-2 border-black p-2 bg-white"><canvas id="chartTatDiario"></canvas></div></div></div>
 </div>
 
 <div id="ventanaPromCiclo" class="hidden border-2 border-black bg-white">
-<div class="bg-[#0a3a8a] text-white text-center font-bold py-2 text-[12px] border border-black">3. PROM TAT CICLO TOTAL - Jala de DATA - Hora real corregida</div>
+<div class="bg-[#0a3a8a] text-white text-center font-bold py-2 text-[12px] border border-black">PROM TAT CICLO TOTAL - Jala de DATA - Hora real 09:40 corregida</div>
 <div class="grid md:grid-cols-3 gap-4 p-2"><div class="md:col-span-1 overflow-auto max-h-[400px] border-2 border-black"><table class="w-full text-[10px]"><thead><tr><th class="p-1 border border-black bg-gray-100">FECHA</th><th class="p-1 border border-black bg-gray-100">Prom. INGRESO</th><th class="p-1 border border-black bg-gray-100">Prom. INICIO</th><th class="p-1 border border-black bg-gray-100">Prom. SALIDA</th><th class="p-1 border border-black bg-gray-100">Prom. TAT</th></tr></thead><tbody id="tbodyPromSemanal"></tbody><tfoot class="bg-gray-100 font-bold"><tr><td class="p-1 border border-black">Total</td><td class="p-1 border border-black" id="totalIngreso"></td><td class="p-1 border border-black" id="totalInicio"></td><td class="p-1 border border-black" id="totalSalida"></td><td class="p-1 border border-black" id="totalTAT"></td></tr></tfoot></table></div><div class="md:col-span-2 border-2 border-black p-2 bg-white"><canvas id="chartPromSemanal" height="300"></canvas></div></div>
 </div>
 
@@ -102,7 +127,7 @@ var fechaStr = new Date().toLocaleDateString('es-PE');
 var filaEditando = null;
 var ch1=null, ch2=null;
 document.getElementById('fechaHoy').innerText = fechaStr;
-document.getElementById('fechaHeader').innerText = new Date().toLocaleDateString('es-PE',{dateStyle:'full'})+' | v99';
+document.getElementById('fechaHeader').innerText = new Date().toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' | '+new Date().toLocaleTimeString('es-PE');
 function toMin(t){if(!t||t.indexOf(':')==-1) return null; var p=t.split(':'); var h=parseInt(p[0]); var m=parseInt(p[1]); if(isNaN(h)||isNaN(m)) return null; return h*60+m;}
 function toTime(m){if(m==null||isNaN(m)) return '--:--'; m=Math.round(m); var h=Math.floor(m/60)%24; var mm=m%60; return String(h).padStart(2,'0')+':'+String(mm).padStart(2,'0');}
 function toTimeTAT(min){if(min==null||isNaN(min)||min<=0) return '--:--'; var h=Math.floor(min/60); var mm=min%60; return String(h).padStart(2,'0')+':'+String(mm).padStart(2,'0');}
@@ -122,102 +147,4 @@ function cerrarModalAgregar(){document.getElementById('modalAgregar').classList.
 function abrirAdminPass(){document.getElementById('modalPass').classList.remove('hidden')}
 function cerrarAdmin(){document.getElementById('modalAdmin').classList.add('hidden')}
 function entrarAdmin(){if(document.getElementById('inputPass').value==='Lavoro2026'){document.getElementById('modalPass').classList.add('hidden');document.getElementById('modalAdmin').classList.remove('hidden');setTimeout(cargarGraficos,300)}else alert('Clave incorrecta')}
-function editarFila(btn){var tr=btn.closest('tr');filaEditando=tr;var c=tr.querySelectorAll('td');document.getElementById('fTransporte').value=c[1].innerText;document.getElementById('fTracto').value=c[3].innerText;document.getElementById('fCarreta').value=c[4].innerText;document.getElementById('fPallets').value=c[5].innerText;document.getElementById('fTipoProd').value=c[6].innerText;document.getElementById('fProc').value=c[7].innerText;document.getElementById('fTipo').value=c[8].innerText;document.getElementById('fGarita').value=c[9].innerText;document.getElementById('fInicio').value=c[10].innerText;document.getElementById('fFin').value=c[11].innerText;document.getElementById('fVerif').value=c[12].innerText;document.getElementById('fSalida').value=c[13].innerText;document.getElementById('fIngreso').value=c[14].innerText;document.getElementById('fStatus').value=c[15].innerText;document.getElementById('tituloModal').innerText='EDITAR UNIDAD';document.getElementById('modalAgregar').classList.remove('hidden')}
-function eliminarFila(btn){if(confirm('¿Eliminar?')){btn.closest('tr').remove();actualizarContadores()}}
-function actualizarContadores(){var t=document.getElementById('tbodyPrincipal').rows.length;document.getElementById('cTotal').innerText=t;document.getElementById('cRecep').innerText=t;document.getElementById('cAtend').innerText=t; var dataTotal=JSON.parse(localStorage.getItem('DATA_MADRE')||'[]'); document.getElementById('cDataTotal').innerText=dataTotal.length;}
-function limpiarTodo(){if(confirm('¿Limpiar todo?')){document.getElementById('tbodyPrincipal').innerHTML='';document.getElementById('cTotal').innerText='0';document.getElementById('cRecep').innerText='0';document.getElementById('cAtend').innerText='0';}}
-function guardarNuevaUnidad(){var trp=document.getElementById('fTransporte').value||'S/N';var tracto=document.getElementById('fTracto').value.toUpperCase().trim();var carreta=document.getElementById('fCarreta').value.toUpperCase().trim();if(!tracto){alert('Digita PL. TRACTO');return}var placa=carreta?tracto+'/'+carreta:tracto;var pallets=document.getElementById('fPallets').value||'0';var tipoProd=document.getElementById('fTipoProd').value;var proc=document.getElementById('fProc').value;var tipo=document.getElementById('fTipo').value;var garita=document.getElementById('fGarita').value||'';var inicio=document.getElementById('fInicio').value||'';var fin=document.getElementById('fFin').value||'';var verif=document.getElementById('fVerif').value||'';var salida=document.getElementById('fSalida').value||'';var ingreso=document.getElementById('fIngreso').value||'';var status=document.getElementById('fStatus').value;var tat='--:--';if(garita&&salida){var m1=toMin(garita);var m2=toMin(salida); if(m1!=null&&m2!=null){var d=m2-m1; if(d<0) d+=1440; tat=Math.floor(d/60)+':'+String(d%60).padStart(2,'0')}}if(filaEditando){var c=filaEditando.querySelectorAll('td');c[1].innerText=trp;c[2].innerText=placa;c[3].innerText=tracto;c[4].innerText=carreta;c[5].innerText=pallets;c[6].innerText=tipoProd;c[7].innerText=proc;c[8].innerText=tipo;c[9].innerText=garita;c[10].innerText=inicio;c[11].innerText=fin;c[12].innerText=verif;c[13].innerText=salida;c[14].innerText=ingreso;c[15].innerText=status;c[17].innerText=tat}else{var tbody=document.getElementById('tbodyPrincipal');var tr=document.createElement('tr');tr.innerHTML='<td class="td">'+(tbody.rows.length+1)+'</td><td class="td">'+trp+'</td><td class="td font-bold">'+placa+'</td><td class="td">'+tracto+'</td><td class="td">'+carreta+'</td><td class="td">'+pallets+'</td><td class="td">'+tipoProd+'</td><td class="td">'+proc+'</td><td class="td">'+tipo+'</td><td class="td">'+garita+'</td><td class="td">'+inicio+'</td><td class="td">'+fin+'</td><td class="td">'+verif+'</td><td class="td font-bold">'+salida+'</td><td class="td">'+ingreso+'</td><td class="td">'+status+'</td><td class="td"><button onclick="editarFila(this)" class="bg-orange-200 text-[9px] px-2 py-1 rounded mr-1 border border-black">Editar</button><button onclick="eliminarFila(this)" class="bg-red-600 text-white text-[9px] px-2 py-1 rounded border border-black">Eliminar</button></td><td class="td">'+tat+'</td>';tbody.appendChild(tr)}cerrarModalAgregar();actualizarContadores();}
-function filtrarData(){var f=document.getElementById('fDataFecha').value.toLowerCase(); document.querySelectorAll('#tbodyData tr').forEach(function(tr){tr.style.display=tr.innerText.toLowerCase().includes(f)?'':'none'})}
-function cargarGraficos(){
-  try{
-    var DATA=JSON.parse(localStorage.getItem('DATA_MADRE')||'[]');
-    var htmlData='';
-    DATA.forEach(function(r){htmlData+='<tr><td class="td-small">'+r.fecha+'</td><td class="td-small">'+r.transporte+'</td><td class="td-small font-bold">'+r.placa+'</td><td class="td-small">'+r.tracto+'</td><td class="td-small">'+r.carreta+'</td><td class="td-small">'+r.tipoProd+'</td><td class="td-small">'+r.pallets+'</td><td class="td-small">'+r.garita+'</td><td class="td-small">'+r.inicio+'</td><td class="td-small">'+r.salida+'</td><td class="td-small font-bold">'+r.tat+'</td></tr>';});
-    document.getElementById('tbodyData').innerHTML=htmlData||'<tr><td colspan=11 class="text-center text-gray-400 p-2">No hay datos. Guarda un día</td></tr>';
-    document.getElementById('totalDataInfo').innerText='Total DATA: '+DATA.length;
-    document.getElementById('cDataTotal').innerText=DATA.length;
-    var htmlDiario=''; var htmlResumen=''; var datos=[]; var tot=0; var c=0; var sumGar=0,cGar=0,sumSal=0,cSal=0,sumIng=0,cIng=0,sumIni=0,cIni=0;
-    var fuente = DATA.length>0 ? DATA : [];
-    if(DATA.length>0){
-      fuente.forEach(function(r){
-        htmlDiario+='<tr><td class="p-1 border border-black bg-white">'+r.fecha+'</td><td class="p-1 border border-black bg-white">'+r.tracto+'</td><td class="p-1 border border-black bg-white">'+r.garita+'</td><td class="p-1 border border-black bg-white">'+r.inicio+'</td><td class="p-1 border border-black bg-white">'+r.salida+'</td><td class="p-1 border border-black bg-white font-bold">'+r.tat+'</td></tr>';
-        htmlResumen+='<tr><td class="p-1 border border-black bg-white">'+r.fecha+'</td><td class="p-1 border border-black bg-white">'+r.tracto+'</td><td class="p-1 border border-black bg-white">'+r.tipoProd+'</td><td class="p-1 border border-black bg-white">'+r.garita+'</td><td class="p-1 border border-black bg-white">'+r.inicio+'</td><td class="p-1 border border-black bg-white">'+r.salida+'</td><td class="p-1 border border-black bg-white font-bold">'+r.tat+'</td></tr>';
-        var m=toMin(r.tat); if(m!=null){datos.push({placa:r.tracto,min:m}); tot+=m; c++}
-        var mGar=toMin(r.garita); if(mGar!=null){sumGar+=mGar;cGar++}
-        var mSal=toMin(r.salida); if(mSal!=null){sumSal+=mSal;cSal++}
-        var mIng=toMin(r.garita); if(mIng!=null){sumIng+=mIng;cIng++}
-        var mIni=toMin(r.inicio); if(mIni!=null){sumIni+=mIni;cIni++}
-      });
-    } else {
-      document.querySelectorAll('#tbodyPrincipal tr').forEach(function(f){
-        var td=f.querySelectorAll('td'); if(td.length<18) return;
-        var tracto=td[3].innerText; var tipoProd=td[6].innerText; var gar=td[9].innerText; var ini=td[10].innerText; var sal=td[13].innerText; var tatText=td[17].innerText;
-        var min=toMin(tatText); if(min!=null){datos.push({placa:tracto,min:min}); tot+=min; c++}
-        htmlDiario+='<tr><td class="p-1 border border-black bg-white">'+fechaStr+'</td><td class="p-1 border border-black bg-white">'+tracto+'</td><td class="p-1 border border-black bg-white">'+gar+'</td><td class="p-1 border border-black bg-white">'+ini+'</td><td class="p-1 border border-black bg-white">'+sal+'</td><td class="p-1 border border-black bg-white font-bold">'+tatText+'</td></tr>';
-        htmlResumen+='<tr><td class="p-1 border border-black bg-white">'+fechaStr+'</td><td class="p-1 border border-black bg-white">'+tracto+'</td><td class="p-1 border border-black bg-white">'+tipoProd+'</td><td class="p-1 border border-black bg-white">'+gar+'</td><td class="p-1 border border-black bg-white">'+ini+'</td><td class="p-1 border border-black bg-white">'+sal+'</td><td class="p-1 border border-black bg-white font-bold">'+tatText+'</td></tr>';
-        var mGar=toMin(gar); if(mGar!=null){sumGar+=mGar;cGar++}
-        var mSal=toMin(sal); if(mSal!=null){sumSal+=mSal;cSal++}
-        var mIng=toMin(gar); if(mIng!=null){sumIng+=mIng;cIng++}
-        var mIni=toMin(ini); if(mIni!=null){sumIni+=mIni;cIni++}
-      });
-    }
-    document.getElementById('tbodyTatDiario').innerHTML=htmlDiario||'<tr><td colspan=6 class="text-center">Sin datos</td></tr>';
-    document.getElementById('tbodyTatDiarioResumen').innerHTML=htmlResumen||'<tr><td colspan=7 class="text-center">Sin datos</td></tr>';
-    var prom=c?Math.round(tot/c):0;
-    document.getElementById('promDiario').innerHTML='Promedio: '+toTimeTAT(prom)+' | META 01:10 | INGRESO: '+(cIng?toTime(sumIng/cIng):'--:--')+' | INICIO: '+(cIni?toTime(sumIni/cIni):'--:--')+' | SALIDA: '+(cSal?toTime(sumSal/cSal):'--:--');
-    document.getElementById('detTotalIngreso').innerText=cIng?toTime(sumIng/cIng):'';
-    document.getElementById('detTotalInicio').innerText=cIni?toTime(sumIni/cIni):'';
-    document.getElementById('detTotalSalida').innerText=cSal?toTime(sumSal/cSal):'';
-    document.getElementById('detTotalTat').innerText=prom?toTimeTAT(prom):'';
-    if(ch1)ch1.destroy();
-    ch1=new Chart(document.getElementById('chartTatDiario'),{type:'line',data:{labels:datos.map(function(x){return x.placa}),datasets:[{label:'TAT (min)',data:datos.map(function(x){return x.min}),borderColor:'#0a3a8a',borderWidth:2,tension:0.3},{label:'META 70',data:datos.map(function(){return 70}),borderColor:'red',borderDash:[5,5]}]},options:{responsive:true}});
-    var hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');
-    var htmlHist=''; var totIng=0,totIni=0,totSalH=0,totTat=0; var nIng=0,nIni=0,nSalH=0,nTat=0;
-    hist.forEach(function(x){htmlHist+='<tr><td class="p-1 border border-black bg-white">'+x.fecha+'</td><td class="p-1 border border-black bg-white">'+(x.promIngreso||'--:--')+'</td><td class="p-1 border border-black bg-white">'+(x.promInicio||'--:--')+'</td><td class="p-1 border border-black bg-white">'+(x.promSalida||'--:--')+'</td><td class="p-1 border border-black bg-white font-bold">'+x.promTAT+'</td></tr>'; if(x.ingresoMin!=null){totIng+=x.ingresoMin;nIng++} if(x.inicioMin!=null){totIni+=x.inicioMin;nIni++} if(x.salidaMin!=null){totSalH+=x.salidaMin;nSalH++} if(x.min!=null){totTat+=x.min;nTat++}});
-    document.getElementById('tbodyPromSemanal').innerHTML=htmlHist||'<tr><td colspan=5 class="text-center text-gray-400">Sin días guardados</td></tr>';
-    document.getElementById('totalIngreso').innerText=nIng?toTime(totIng/nIng):'';
-    document.getElementById('totalInicio').innerText=nIni?toTime(totIni/nIni):'';
-    document.getElementById('totalSalida').innerText=nSalH?toTime(totSalH/nSalH):'';
-    document.getElementById('totalTAT').innerText=nTat?toTimeTAT(totTat/nTat):'';
-    if(ch2)ch2.destroy();
-    ch2=new Chart(document.getElementById('chartPromSemanal'),{type:'line',data:{labels:hist.map(function(x){return x.fecha}),datasets:[{label:'INGRESO (hora real)',data:hist.map(function(x){return x.ingresoMin}),borderColor:'#2563eb',tension:0.3},{label:'INICIO (hora real)',data:hist.map(function(x){return x.inicioMin}),borderColor:'#f59e0b',tension:0.3},{label:'SALIDA (hora real)',data:hist.map(function(x){return x.salidaMin}),borderColor:'#10b981',tension:0.3},{label:'TAT (min)',data:hist.map(function(x){return x.min}),borderColor:'#000',borderWidth:2,tension:0.3},{label:'META 70',data:hist.map(function(){return 70}),borderColor:'red',borderDash:[5,5]}]},options:{responsive:true}});
-  }catch(e){console.log(e)}
-}
-function guardarDia(){
-  var filas=document.querySelectorAll('#tbodyPrincipal tr');
-  if(filas.length==0){alert('No hay unidades');return}
-  var DATA=JSON.parse(localStorage.getItem('DATA_MADRE')||'[]');
-  var sumGar=0,cGar=0,sumIni=0,cIni=0,sumSal=0,cSal=0,sumTat=0,cTat=0;
-  filas.forEach(function(f){
-    var td=f.querySelectorAll('td');if(td.length<18)return;
-    var mGar=toMin(td[9].innerText); if(mGar!=null){sumGar+=mGar;cGar++}
-    var mIni=toMin(td[10].innerText); if(mIni!=null){sumIni+=mIni;cIni++}
-    var mSal=toMin(td[13].innerText); if(mSal!=null){sumSal+=mSal;cSal++}
-    var tat=td[17].innerText; var mTat=toMin(tat); if(mTat!=null){sumTat+=mTat;cTat++}
-    DATA.push({fecha:fechaStr,transporte:td[1].innerText,placa:td[2].innerText,tracto:td[3].innerText,carreta:td[4].innerText,pallets:td[5].innerText,tipoProd:td[6].innerText,procedencia:td[7].innerText,tipo:td[8].innerText,garita:td[9].innerText,inicio:td[10].innerText,fin:td[11].innerText,verif:td[12].innerText,salida:td[13].innerText,ingreso:td[14].innerText,status:td[15].innerText,tat:td[17].innerText});
-  });
-  localStorage.setItem('DATA_MADRE',JSON.stringify(DATA));
-  var promGar=cGar?Math.round(sumGar/cGar):null;
-  var promIni=cIni?Math.round(sumIni/cIni):null;
-  var promSal=cSal?Math.round(sumSal/cSal):null;
-  var promTat=cTat?Math.round(sumTat/cTat):0;
-  var hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');
-  hist.push({fecha:fechaStr,promIngreso:promGar!=null?toTime(promGar):'--:--',promInicio:promIni!=null?toTime(promIni):'--:--',promSalida:promSal!=null?toTime(promSal):'--:--',promTAT:toTimeTAT(promTat)+':00',ingresoMin:promGar,inicioMin:promIni,salidaMin:promSal,min:promTat});
-  localStorage.setItem('historicoTAT',JSON.stringify(hist));
-  alert('✅ GUARDADO v99 en DATA: '+filas.length+' | INGRESO REAL: '+toTime(promGar)+' | INICIO: '+toTime(promIni)+' | SALIDA: '+toTime(promSal)+' | TAT: '+toTimeTAT(promTat));
-  cargarGraficos();
-}
-function borrarData(){if(confirm('¿BORRAR TODA LA DATA?')){localStorage.removeItem('DATA_MADRE');localStorage.removeItem('historicoTAT');alert('DATA borrada');cargarGraficos();}}
-function exportarDataExcel(){var DATA=JSON.parse(localStorage.getItem('DATA_MADRE')||'[]');if(DATA.length==0){alert('DATA vacía');return}var headers=["FECHA","TRANSPORTE","PLACA","TRACTO","CARRETA","TIPO","PALLETS","GARITA","INICIO","SALIDA","TAT"];var data=[["DATA MADRE v99"],[],headers];DATA.forEach(function(r){data.push([r.fecha,r.transporte,r.placa,r.tracto,r.carreta,r.tipoProd,r.pallets,r.garita,r.inicio,r.salida,r.tat])});var ws=XLSX.utils.aoa_to_sheet(data);var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"DATA");XLSX.writeFile(wb,"DATA_v99.xlsx");}
-function exportarExcel(){
-  var total=document.getElementById('tbodyPrincipal').rows.length;
-  var headers=["P","TRANSPORTE","PLACA","TRACTO","CARRETA","PALLETS","TIPO","PROCEDENCIA","TIPO","GARITA","INICIO","FIN","VERIF","SALIDA","INGRESO","STATUS","TAT"];
-  var data=[["STATUS CD LIMA SUR v99"],[],headers];
-  document.querySelectorAll('#tbodyPrincipal tr').forEach(function(tr,i){var c=tr.querySelectorAll('td');if(c.length<18)return;data.push([i+1,c[1].innerText,c[2].innerText,c[3].innerText,c[4].innerText,c[5].innerText,c[6].innerText,c[7].innerText,c[8].innerText,c[9].innerText,c[10].innerText,c[11].innerText,c[12].innerText,c[13].innerText,c[14].innerText,c[15].innerText,c[17].innerText])});
-  var ws=XLSX.utils.aoa_to_sheet(data);var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Status");XLSX.writeFile(wb,"STATUS_v99.xlsx");
-}
-document.getElementById('buscador').addEventListener('input',function(e){var q=e.target.value.toLowerCase();document.querySelectorAll('#tbodyPrincipal tr').forEach(function(tr){tr.style.display=tr.innerText.toLowerCase().includes(q)?'':'none'})});
-actualizarContadores();
-</script>
-</body>
-</html>
+function editarFila(btn){var tr=btn.closest('tr');filaEditando=tr;var c=tr.querySelectorAll('td');document.getElementById('fTransporte').value=c[1].innerText;document.getElementById('fTracto').value=c[3].innerText;document.getElementById('fCarreta').value=c[4].innerText;document.getElementById('fPallets').value=c[5].innerText;document.getElementById('fTipoProd').value=c[6].innerText;document.getElementById('fProc').value=c[7].innerText;document.getElementById('fTipo').value=c[8].innerText;document.getElementById('fGarita').value=c[9].innerText;document.getElementById('fInicio').value=c[10].innerText;document.getElementById('fFin').value=c[11].innerText;document.getEl
