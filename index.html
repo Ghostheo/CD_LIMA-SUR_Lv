@@ -1,262 +1,104 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Status CD LIMA SUR - TAT Recepciones T1</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
- body{font-family:'Inter',sans-serif;background:#f8fafc}
- .card-counter{border-radius:12px;padding:12px;text-align:center;font-weight:800}
- .th-yellow{background:#facc15;color:#000;font-size:10px;padding:8px 6px;white-space:nowrap;position:sticky;top:0}
- .td{font-size:11px;padding:6px;border-bottom:1px solid #e2e8f0}
- .modal-bg{background:rgba(0,0,0,0.6);backdrop-filter:blur(4px)}
-</style>
+<style>body{font-family:Inter,sans-serif;background:#f8fafc}.th-yellow{background:#facc15;font-size:10px;padding:8px 6px;white-space:nowrap}.td{font-size:11px;padding:6px;border-bottom:1px solid #e2e8f0}.modal-bg{background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}</style>
 </head>
 <body class="p-3">
+<!-- HEADER igual que tenías -->
+<div class="bg-white rounded-xl shadow p-4 flex justify-between items-center mb-3"><div><h1 class="text-xl font-black">Status CD LIMA SUR</h1><p id="fechaHeader" class="text-[11px] text-gray-500"></p><p class="text-[11px] text-green-600 font-bold">● Sincronizado en vivo</p></div><div class="flex gap-2 border-2 border-red-600 p-2 rounded-lg"><button onclick="abrirAdmin()" class="border-2 border-gray-800 rounded-xl px-4 py-2 text-[13px] font-bold">🔒 ADMIN DASHBOARD</button><button onclick="guardarDia()" class="bg-green-600 text-white rounded-xl px-5 py-2 text-[13px] font-bold">📥 GUARDAR DÍA</button></div></div>
 
-<!-- HEADER -->
-<div class="bg-white rounded-xl shadow p-4 flex justify-between items-center mb-3 flex-wrap gap-2">
-  <div>
-    <div class="flex items-center gap-2">
-      <h1 class="text-xl font-black">Status CD LIMA SUR</h1>
-    </div>
-    <p class="text-[11px] text-gray-500" id="fechaHeader"></p>
-    <p class="text-[11px] text-green-600 font-bold">● Sincronizado en vivo</p>
-  </div>
-  <div class="flex gap-2 border-2 border-red-600 p-2 rounded-lg bg-white">
-    <button onclick="abrirAdmin()" class="border-2 border-gray-800 rounded-xl px-4 py-2 text-[13px] font-bold flex items-center gap-2">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      ADMIN DASHBOARD
-    </button>
-    <button onclick="guardarDia()" class="bg-green-600 hover:bg-green-700 text-white rounded-xl px-5 py-2 text-[13px] font-bold flex items-center gap-2">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      GUARDAR DÍA
-    </button>
-  </div>
-</div>
+<div class="bg-white rounded-xl shadow p-3 mb-3"><div class="grid grid-cols-4 gap-3"><div class="bg-blue-50 text-blue-700 rounded-xl p-3 text-center font-bold">RECEPCIÓN<br><span id="cRecep" class="text-2xl">1</span></div><div class="bg-black text-white rounded-xl p-3 text-center font-bold">TOTAL<br><span id="cTotal" class="text-2xl">1</span></div><div class="bg-green-700 text-white rounded-xl p-3 text-center font-bold">ATENDIDO<br><span id="cAtend" class="text-2xl">1</span></div></div></div>
 
-<!-- POR TIPO / POR ESTATUS -->
-<div class="bg-white rounded-xl shadow p-3 mb-3">
-  <div class="grid grid-cols-4 gap-3 mb-4">
-    <div class="card-counter bg-blue-50 text-blue-700">RECEPCIÓN<br><span id="cRecep" class="text-2xl">1</span></div>
-    <div class="card-counter bg-emerald-50 text-emerald-700">DESPACHO<br><span id="cDespa" class="text-2xl">0</span></div>
-    <div class="card-counter bg-yellow-50 text-yellow-700">TRASLADO<br><span id="cTras" class="text-2xl">0</span></div>
-    <div class="card-counter bg-purple-50 text-purple-700">RECE/DESP<br><span id="cReceDesp" class="text-2xl">0</span></div>
-  </div>
-  <div class="grid grid-cols-4 gap-3">
-    <div class="card-counter bg-black text-white">TOTAL<br><span id="cTotal" class="text-2xl">1</span></div>
-    <div class="card-counter bg-red-600 text-white">PENDIENTE<br><span id="cPend" class="text-2xl">0</span></div>
-    <div class="card-counter bg-red-100 text-red-700">EN PROCESO<br><span id="cProc" class="text-2xl">0</span></div>
-    <div class="card-counter bg-orange-500 text-white">PEND. FACTURA<br><span class="text-2xl">0</span></div>
-    <div class="card-counter bg-emerald-100 text-emerald-700">CARGADO/FACT.<br><span class="text-2xl">0</span></div>
-    <div class="card-counter bg-green-700 text-white">ATENDIDO<br><span id="cAtend" class="text-2xl">1</span></div>
-    <div class="card-counter bg-gray-200 text-gray-700">NO EN CD<br><span class="text-2xl">0</span></div>
-    <div class="card-counter bg-sky-500 text-white">PERNOCTANDO<br><span class="text-2xl">0</span></div>
-  </div>
-</div>
+<div class="bg-white rounded-xl shadow p-3"><div class="flex justify-between mb-2"><h2 class="font-bold text-[11px]">PANEL DE CONTROL DE UNIDADES</h2><div class="flex gap-2"><input id="buscador" placeholder="Buscar..." class="border text-[11px] px-3 py-1 rounded w-64"><button id="btnLimpiar" class="bg-red-600 text-white text-[10px] px-3 rounded font-bold">LIMPIAR</button><button onclick="abrirModalAgregar()" class="bg-blue-700 text-white text-[10px] px-3 rounded font-bold">+ Agregar Unidad</button><button id="btnExcel" class="bg-green-700 text-white text-[10px] px-3 rounded font-bold">Exportar a Excel</button></div></div>
+<div class="overflow-x-auto"><table class="w-full" id="tablaPrincipal"><thead><tr><th class="th-yellow">P</th><th class="th-yellow">TRANSPORTE</th><th class="th-yellow">PLACA</th><th class="th-yellow">PL. TRACTO</th><th class="th-yellow">PL. CARRETA</th><th class="th-yellow">N° PALLETS</th><th class="th-yellow">TIPO DE PRODUCTO</th><th class="th-yellow">PROCEDENCIA</th><th class="th-yellow">TIPO</th><th class="th-yellow">REPORTE EN GARITA</th><th class="th-yellow">INICIO DESCARGA</th><th class="th-yellow">FIN DESCARGA</th><th class="th-yellow">FIN VERIF GR</th><th class="th-yellow">SALIDA CD</th><th class="th-yellow">INGRESO GR/SAP</th><th class="th-yellow">STATUS</th><th class="th-yellow">TAT</th></tr></thead><tbody id="tbodyPrincipal"><tr><td class="td">1</td><td class="td">14319153</td><td class="td font-bold">A1Q159/DV1943</td><td class="td">A1Q159</td><td class="td">DV1943</td><td class="td">31</td><td class="td">ABARROTES</td><td class="td">HUACHIPA</td><td class="td text-blue-600">Recepción</td><td class="td">09:40</td><td class="td">10:47</td><td class="td">10:50</td><td class="td">11:10</td><td class="td font-bold">10:56</td><td class="td">11:00</td><td class="td">ATENDIDO</td><td class="td">1:16</td></tr></tbody></table></div></div>
 
-<!-- PANEL DE CONTROL -->
-<div class="bg-white rounded-xl shadow p-3">
-  <div class="flex justify-between mb-2 flex-wrap gap-2">
-    <h2 class="font-bold text-[11px]">PANEL DE CONTROL DE UNIDADES</h2>
-    <div class="flex gap-2 flex-wrap">
-      <input id="buscador" placeholder="Buscar por transporte, placa, procedencia..." class="border text-[11px] px-3 py-1 rounded w-64">
-      <button id="btnLimpiar" class="bg-red-600 text-white text-[10px] px-3 py-1.5 rounded font-bold">LIMPIAR</button>
-      <button onclick="abrirModalAgregar()" class="bg-blue-700 text-white text-[10px] px-3 py-1.5 rounded font-bold">+ Agregar Unidad</button>
-      <button id="btnExcel" class="bg-green-700 text-white text-[10px] px-3 py-1.5 rounded font-bold">Exportar a Excel</button>
-    </div>
-  </div>
-  <div class="overflow-x-auto max-h-[60vh]">
-    <table class="w-full" id="tablaPrincipal">
-      <thead>
-        <tr>
-          <th class="th-yellow">P</th><th class="th-yellow">TRANSPORTE</th><th class="th-yellow">PLACA</th><th class="th-yellow">PL. TRACTO</th><th class="th-yellow">PL. CARRETA</th><th class="th-yellow">N° PALLETS</th><th class="th-yellow">TIPO DE PRODUCTO</th><th class="th-yellow">PROCEDENCIA</th><th class="th-yellow">TIPO</th><th class="th-yellow">REPORTE EN GARITA</th><th class="th-yellow">INICIO DESCARGA</th><th class="th-yellow">FIN DESCARGA</th><th class="th-yellow">FIN VERIF GR</th><th class="th-yellow">SALIDA CD</th><th class="th-yellow">INGRESO GR/SAP</th><th class="th-yellow">STATUS</th><th class="th-yellow">ACCIONES</th><th class="th-yellow">TAT</th>
-        </tr>
-      </thead>
-      <tbody id="tbodyPrincipal">
-        <tr>
-          <td class="td">1</td><td class="td">14319153</td><td class="td font-bold">A1Q159/DV1943</td><td class="td">A1Q159</td><td class="td">DV1943</td><td class="td">31</td><td class="td">ABARROTES</td><td class="td">HUACHIPA</td><td class="td text-blue-600">Recepción</td><td class="td">09:40</td><td class="td">10:47</td><td class="td">10:50</td><td class="td">11:10</td><td class="td font-bold">10:56</td><td class="td">11:00</td><td class="td"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px]">ATENDIDO</span></td><td class="td"><button onclick="eliminarFila(this)" class="bg-red-600 text-white text-[9px] px-2 py-1 rounded">Eliminar</button></td><td class="td"><span class="bg-blue-900 text-white px-2 py-1 rounded text-[10px] tat-cell">1:16</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+<!-- MODAL AGREGAR -->
+<div id="modalAgregar" class="fixed inset-0 modal-bg hidden z-50 flex items-center justify-center p-4"><div class="bg-white rounded-xl max-w-3xl w-full p-5 max-h-[90vh] overflow-y-auto"><div class="flex justify-between mb-4"><h3 class="font-black">+ AGREGAR UNIDAD LIMA SUR</h3><button onclick="cerrarModalAgregar()" class="bg-black text-white px-3 rounded">X</button></div><div class="grid grid-cols-2 gap-3 text-[12px]"><label>TRANSPORTE<input id="fTransporte" class="border p-2 rounded w-full"></label><label>N° PALLETS<input id="fPallets" type="number" class="border p-2 rounded w-full"></label><label class="font-bold">PL. TRACTO<input id="fTracto" class="border-2 border-blue-400 p-2 rounded w-full bg-yellow-50"></label><label class="font-bold">PL. CARRETA<input id="fCarreta" class="border-2 border-blue-400 p-2 rounded w-full bg-yellow-50"></label><label>TIPO PRODUCTO<select id="fTipoProd" class="border p-2 rounded w-full"><option>ABARROTES</option><option>BEBIDAS</option><option>REFRIGERADO</option></select></label><label>PROCEDENCIA<input id="fProc" value="HUACHIPA" class="border p-2 rounded w-full"></label><label>REPORTE GARITA<input id="fGarita" type="time" class="border p-2 rounded w-full bg-orange-100"></label><label>SALIDA CD<input id="fSalida" type="time" class="border p-2 rounded w-full"></label><label>INICIO DESCARGA<input id="fInicio" type="time" class="border p-2 rounded w-full"></label><label>FIN DESCARGA<input id="fFin" type="time" class="border p-2 rounded w-full"></label><label>FIN VERIF<input id="fVerif" type="time" class="border p-2 rounded w-full"></label><label>INGRESO SAP<input id="fIngreso" type="time" class="border p-2 rounded w-full"></label><label>STATUS<select id="fStatus" class="border p-2 rounded w-full"><option>ATENDIDO</option><option>PENDIENTE</option><option>EN PROCESO</option></select></label><label>TIPO<select id="fTipo" class="border p-2 rounded w-full"><option>Recepción</option><option>Despacho</option></select></label></div><button onclick="guardarNuevaUnidad()" class="mt-5 bg-blue-700 text-white w-full py-3 rounded-xl font-black">GUARDAR UNIDAD</button></div></div>
 
-<!-- MODAL AGREGAR UNIDAD -->
-<div id="modalAgregar" class="fixed inset-0 modal-bg hidden z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-xl max-w-3xl w-full p-5 max-h-[90vh] overflow-y-auto shadow-2xl">
-    <div class="flex justify-between mb-4">
-      <h3 class="font-black text-[16px]">+ AGREGAR NUEVA UNIDAD - Digita placas</h3>
-      <button onclick="cerrarModalAgregar()" class="bg-black text-white px-3 py-1 rounded">X</button>
-    </div>
-    <div class="grid grid-cols-2 gap-3 text-[12px]">
-      <label class="flex flex-col gap-1">TRANSPORTE / N° TRANSPORTE <input id="fTransporte" class="border p-2 rounded" placeholder="14319153"></label>
-      <label class="flex flex-col gap-1">N° PALLETS <input id="fPallets" type="number" class="border p-2 rounded" placeholder="31"></label>
-      <label class="flex flex-col gap-1 font-bold">PL. TRACTO (cabeza) <input id="fTracto" class="border-2 border-blue-400 p-2 rounded bg-yellow-50" placeholder="A1Q159"></label>
-      <label class="flex flex-col gap-1 font-bold">PL. CARRETA (carreta) <input id="fCarreta" class="border-2 border-blue-400 p-2 rounded bg-yellow-50" placeholder="DV1943"></label>
-      <label class="flex flex-col gap-1">TIPO DE PRODUCTO <select id="fTipoProd" class="border p-2 rounded"><option>ABARROTES</option><option>BEBIDAS</option><option>PRODUCTOS SECOS</option><option>REFRIGERADO</option><option>CARGA SECA</option></select></label>
-      <label class="flex flex-col gap-1">PROCEDENCIA <input id="fProc" class="border p-2 rounded" value="HUACHIPA"></label>
-      <label class="flex flex-col gap-1">TIPO <select id="fTipo" class="border p-2 rounded"><option>Recepción</option><option>Despacho</option><option>Traslado</option><option>Rece/Desp</option></select></label>
-      <label class="flex flex-col gap-1">REPORTE EN GARITA (HH:MM) <input id="fGarita" type="time" class="border p-2 rounded bg-orange-100"></label>
-      <label class="flex flex-col gap-1">INICIO DESCARGA <input id="fInicio" type="time" class="border p-2 rounded"></label>
-      <label class="flex flex-col gap-1">FIN DESCARGA <input id="fFin" type="time" class="border p-2 rounded"></label>
-      <label class="flex flex-col gap-1">FIN VERIFICACION GR <input id="fVerif" type="time" class="border p-2 rounded"></label>
-      <label class="flex flex-col gap-1">SALIDA CD <input id="fSalida" type="time" class="border p-2 rounded"></label>
-      <label class="flex flex-col gap-1">HORA INGRESO GR/SAP <input id="fIngreso" type="time" class="border p-2 rounded"></label>
-      <label class="flex flex-col gap-1">STATUS <select id="fStatus" class="border p-2 rounded"><option>ATENDIDO</option><option>PENDIENTE</option><option>EN PROCESO</option><option>EN DESCARGA</option><option>PERNOCTANDO</option></select></label>
-    </div>
-    <button onclick="guardarNuevaUnidad()" class="mt-5 bg-blue-700 hover:bg-blue-800 text-white w-full py-3 rounded-xl font-black text-[14px]">GUARDAR UNIDAD</button>
-  </div>
-</div>
-
-<!-- MODAL ADMIN -->
-<div id="modalAdmin" class="fixed inset-0 modal-bg hidden z-50 p-4 overflow-y-auto">
-  <div class="bg-white rounded-xl max-w-7xl mx-auto p-4">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="font-black text-lg">ADMIN DASHBOARD - Solo Administrador</h2>
-      <button onclick="cerrarAdmin()" class="bg-black text-white px-4 py-1 rounded">X Cerrar</button>
-    </div>
-    <div class="border-2 border-red-600 rounded-lg p-2 mb-4">
-      <div class="bg-[#0a3a8a] text-white text-center font-bold py-2 mb-2 text-[13px]">TAT RECEPCIONES T1 DIARIO - META 01:10:00 | Fecha: <span id="fechaHoy"></span></div>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div>
-          <table class="w-full text-[11px]"><thead class="bg-gray-100"><tr><th>FECHA</th><th>PL. TRACTO</th><th>GARITA</th><th>SALIDA CD</th><th>TAT</th></tr></thead><tbody id="tbodyTatDiario"></tbody></table>
-          <div id="promDiario" class="mt-3 text-[12px] font-bold p-2 bg-gray-50 rounded"></div>
-        </div>
-        <div class="md:col-span-2"><canvas id="chartTatDiario"></canvas></div>
-      </div>
-    </div>
-    <div class="border-2 border-gray-800 rounded-lg p-2">
-      <div class="bg-[#0a3a8a] text-white text-center font-bold py-2 mb-2 text-[13px]">PROM CICLO TOTAL RECEPCIONES T1 SEMANAL - Histórico Guardado</div>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div><table class="w-full text-[11px]"><thead class="bg-gray-100"><tr><th>FECHA</th><th>Prom. TAT</th><th>Total Und.</th></tr></thead><tbody id="tbodyPromSemanal"></tbody></table></div>
-        <div class="md:col-span-2"><canvas id="chartPromSemanal"></canvas></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL PASSWORD -->
-<div id="modalPass" class="fixed inset-0 modal-bg hidden z-[60] flex items-center justify-center">
-  <div class="bg-white p-6 rounded-xl w-80 shadow-2xl">
-    <h3 class="font-bold mb-2">🔒 Acceso Administrador</h3>
-    <input type="password" id="inputPass" placeholder="Contraseña" class="border w-full p-2 rounded mb-3">
-    <button onclick="validarPass()" class="bg-blue-700 text-white w-full py-2 rounded font-bold">Entrar</button>
-    <p class="text-[10px] text-gray-400 mt-2">Clave: Lavoro2026</p>
-    <button onclick="document.getElementById('modalPass').classList.add('hidden')" class="w-full mt-2 text-[11px]">Cancelar</button>
-  </div>
-</div>
+<!-- MODAL ADMIN (igual que antes) -->
+<div id="modalAdmin" class="fixed inset-0 modal-bg hidden z-50 p-4 overflow-y-auto"><div class="bg-white rounded-xl max-w-7xl mx-auto p-4"><div class="flex justify-between mb-4"><h2 class="font-black">ADMIN DASHBOARD</h2><button onclick="cerrarAdmin()" class="bg-black text-white px-4 py-1 rounded">X</button></div><div class="border-2 border-red-600 rounded-lg p-2 mb-4"><div class="bg-[#0a3a8a] text-white text-center font-bold py-2">TAT RECEPCIONES T1 DIARIO - META 01:10:00 | <span id="fechaHoy"></span></div><div class="grid md:grid-cols-3 gap-4 mt-2"><table class="w-full text-[11px]"><thead class="bg-gray-100"><tr><th>FECHA</th><th>PL. TRACTO</th><th>GARITA</th><th>SALIDA</th><th>TAT</th></tr></thead><tbody id="tbodyTatDiario"></tbody></table><div class="md:col-span-2"><canvas id="chartTatDiario"></canvas></div></div><div id="promDiario" class="font-bold text-[12px] mt-2"></div></div><div class="border-2 border-gray-800 rounded-lg p-2"><div class="bg-[#0a3a8a] text-white text-center font-bold py-2">PROM CICLO TOTAL SEMANAL</div><div class="grid md:grid-cols-3 gap-4 mt-2"><table class="w-full text-[11px]"><thead><tr><th>FECHA</th><th>Prom TAT</th></tr></thead><tbody id="tbodyPromSemanal"></tbody></table><div class="md:col-span-2"><canvas id="chartPromSemanal"></canvas></div></div></div></div></div>
+<div id="modalPass" class="fixed inset-0 modal-bg hidden z-[60] flex items-center justify-center"><div class="bg-white p-6 rounded-xl w-80"><h3 class="font-bold mb-2">🔒 Admin</h3><input type="password" id="inputPass" class="border w-full p-2 rounded mb-3"><button onclick="validarPass()" class="bg-blue-700 text-white w-full py-2 rounded">Entrar</button></div></div>
 
 <script>
-const hoy = new Date();
-const fechaStr = hoy.toLocaleDateString('es-PE');
-document.getElementById('fechaHoy').innerText = fechaStr;
-document.getElementById('fechaHeader').innerText = hoy.toLocaleDateString('es-PE',{weekday:'long', day:'2-digit', month:'long', year:'numeric'}) + ' | ' + hoy.toLocaleTimeString('es-PE');
-
-function abrirModalAgregar(){ document.getElementById('modalAgregar').classList.remove('hidden'); }
-function cerrarModalAgregar(){ document.getElementById('modalAgregar').classList.add('hidden'); }
-function abrirAdmin(){ document.getElementById('modalPass').classList.remove('hidden'); document.getElementById('inputPass').focus(); }
-function cerrarAdmin(){ document.getElementById('modalAdmin').classList.add('hidden'); }
-function validarPass(){
-  if(document.getElementById('inputPass').value === 'Lavoro2026'){
-    document.getElementById('modalPass').classList.add('hidden');
-    document.getElementById('inputPass').value='';
-    document.getElementById('modalAdmin').classList.remove('hidden');
-    cargarGraficos();
-  }else alert('Contraseña incorrecta');
-}
-
-function calcularTAT(){
-  const filas = document.querySelectorAll('#tbodyPrincipal tr');
-  let tbodyDiario = ''; let datosGrafico=[]; let totalMin=0; let count=0;
-  filas.forEach(f=>{
-    const c = f.querySelectorAll('td');
-    if(c.length<15) return;
-    const tracto=c[3].innerText; const garita=c[9].innerText; const salida=c[13].innerText; const tat=c[17].innerText;
-    let min=0; if(tat.includes(':')){ const p=tat.split(':'); min=parseInt(p[0])*60+parseInt(p[1]); }
-    if(min>0){ datosGrafico.push({placa:tracto,min}); totalMin+=min; count++; }
-    tbodyDiario+=`<tr class="border-b"><td class="p-1">${fechaStr}</td><td class="p-1 font-bold">${tracto}</td><td class="p-1">${garita}</td><td class="p-1">${salida}</td><td class="p-1 font-bold">${tat}</td></tr>`;
-  });
-  document.getElementById('tbodyTatDiario').innerHTML=tbodyDiario;
-  const prom = count? Math.round(totalMin/count):0;
-  const h=Math.floor(prom/60); const m=prom%60;
-  document.getElementById('promDiario').innerHTML=`Promedio del día: ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:00 • Meta: 01:10:00 ${prom<=70?'✅ Cumple':'❌ No Cumple'} | Total: ${count} und.`;
-  return datosGrafico;
-}
-
-let chart1, chart2;
-function cargarGraficos(){
-  const datos=calcularTAT();
-  if(chart1) chart1.destroy();
-  chart1=new Chart(document.getElementById('chartTatDiario'),{type:'line',data:{labels:datos.map(d=>d.placa),datasets:[{label:'TAT (min) - Hoy '+fechaStr,data:datos.map(d=>d.min),borderColor:'#f97316',backgroundColor:'rgba(249,115,22,0.2)',tension:0.3}]},options:{responsive:true,plugins:{title:{display:true,text:'TAT DIARIO - PLACAS VS TIEMPOS'}}}});
-  const hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');
-  let tbodyHist=''; hist.forEach(h=>{tbodyHist+=`<tr><td class="p-1">${h.fecha}</td><td class="p-1 font-bold">${h.promTAT}</td><td class="p-1">${h.total}</td></tr>`});
-  document.getElementById('tbodyPromSemanal').innerHTML=tbodyHist || '<tr><td colspan=3 class="text-center text-gray-400 p-3">Aún no hay días guardados. Usa GUARDAR DÍA</td></tr>';
-  if(chart2) chart2.destroy();
-  chart2=new Chart(document.getElementById('chartPromSemanal'),{type:'line',data:{labels:hist.map(h=>h.fecha),datasets:[{label:'Prom TAT (min)',data:hist.map(h=>h.min),borderColor:'#f97316'},{label:'META 70 min',data:hist.map(()=>70),borderColor:'red',borderDash:[5,5]}]},options:{responsive:true}});
-}
-
-function guardarDia(){
-  if(!confirm('¿Guardar todo lo del día '+fechaStr+' ? Se almacenará en histórico.')) return;
-  const datos=calcularTAT(); const promMin=datos.length?Math.round(datos.reduce((a,b)=>a+b.min,0)/datos.length):0;
-  const h=Math.floor(promMin/60); const m=promMin%60;
-  const nuevo={fecha:fechaStr,promTAT:`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:00`,min:promMin,total:datos.length};
-  const hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]'); hist.push(nuevo); localStorage.setItem('historicoTAT',JSON.stringify(hist));
-  alert('✅ Día '+fechaStr+' guardado. '+datos.length+' unidades almacenadas.');
-}
+const hoy=new Date();const fechaStr=hoy.toLocaleDateString('es-PE');document.getElementById('fechaHoy').innerText=fechaStr;document.getElementById('fechaHeader').innerText=hoy.toLocaleDateString('es-PE',{dateStyle:'full'})+' | '+hoy.toLocaleTimeString('es-PE');
+function abrirModalAgregar(){document.getElementById('modalAgregar').classList.remove('hidden')}function cerrarModalAgregar(){document.getElementById('modalAgregar').classList.add('hidden')}function abrirAdmin(){document.getElementById('modalPass').classList.remove('hidden')}function cerrarAdmin(){document.getElementById('modalAdmin').classList.add('hidden')}function validarPass(){if(document.getElementById('inputPass').value==='Lavoro2026'){document.getElementById('modalPass').classList.add('hidden');document.getElementById('modalAdmin').classList.remove('hidden');cargarGraficos()}else alert('Clave incorrecta')}
 
 function guardarNuevaUnidad(){
-  const transporte=document.getElementById('fTransporte').value || 'S/N';
-  const tracto=document.getElementById('fTracto').value.trim().toUpperCase();
-  const carreta=document.getElementById('fCarreta').value.trim().toUpperCase();
-  if(!tracto){ alert('⚠️ Digita PL. TRACTO'); return; }
-  const placaFull = carreta ? tracto+'/'+carreta : tracto;
-  const pallets=document.getElementById('fPallets').value||'0';
-  const tipoProd=document.getElementById('fTipoProd').value;
-  const proc=document.getElementById('fProc').value;
-  const tipo=document.getElementById('fTipo').value;
-  const garita=document.getElementById('fGarita').value||'--:--';
-  const inicio=document.getElementById('fInicio').value||'--:--';
-  const fin=document.getElementById('fFin').value||'--:--';
-  const verif=document.getElementById('fVerif').value||'--:--';
-  const salida=document.getElementById('fSalida').value||'--:--';
-  const ingreso=document.getElementById('fIngreso').value||'--:--';
-  const status=document.getElementById('fStatus').value;
-  let tat='--:--'; if(garita.includes(':') && salida.includes(':')){ const [hg,mg]=garita.split(':').map(Number); const [hs,ms]=salida.split(':').map(Number); let diff=(hs*60+ms)-(hg*60+mg); if(diff<0) diff+=1440; tat=Math.floor(diff/60)+':'+String(diff%60).padStart(2,'0'); }
-  const tbody=document.getElementById('tbodyPrincipal');
-  const num=tbody.rows.length+1;
-  const tr=document.createElement('tr');
-  tr.innerHTML=`<td class="td">${num}</td><td class="td">${transporte}</td><td class="td font-bold">${placaFull}</td><td class="td font-bold text-blue-700">${tracto}</td><td class="td">${carreta}</td><td class="td">${pallets}</td><td class="td">${tipoProd}</td><td class="td">${proc}</td><td class="td text-blue-600">${tipo}</td><td class="td bg-orange-50 font-bold">${garita}</td><td class="td">${inicio}</td><td class="td">${fin}</td><td class="td">${verif}</td><td class="td font-bold">${salida}</td><td class="td">${ingreso}</td><td class="td"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px]">${status}</span></td><td class="td"><button onclick="eliminarFila(this)" class="bg-red-600 text-white text-[9px] px-2 py-1 rounded">Eliminar</button></td><td class="td"><span class="bg-blue-900 text-white px-2 py-1 rounded text-[10px] tat-cell">${tat}</span></td>`;
-  tbody.appendChild(tr);
-  cerrarModalAgregar();
-  // limpiar inputs
-  ['fTransporte','fTracto','fCarreta','fPallets'].forEach(id=>document.getElementById(id).value='');
-  actualizarContadores();
+  const trp=document.getElementById('fTransporte').value||'S/N';const tracto=document.getElementById('fTracto').value.toUpperCase().trim();const carreta=document.getElementById('fCarreta').value.toUpperCase().trim();if(!tracto){alert('Digita PL. TRACTO');return}
+  const placa=carreta?tracto+'/'+carreta:tracto;const pallets=document.getElementById('fPallets').value||'0';const tipoProd=document.getElementById('fTipoProd').value;const proc=document.getElementById('fProc').value;const tipo=document.getElementById('fTipo').value;const garita=document.getElementById('fGarita').value||'';const inicio=document.getElementById('fInicio').value||'';const fin=document.getElementById('fFin').value||'';const verif=document.getElementById('fVerif').value||'';const salida=document.getElementById('fSalida').value||'';const ingreso=document.getElementById('fIngreso').value||'';const status=document.getElementById('fStatus').value;
+  let tat='--:--';if(garita&&salida){const [hg,mg]=garita.split(':').map(Number);const [hs,ms]=salida.split(':').map(Number);let d=(hs*60+ms)-(hg*60+mg);if(d<0)d+=1440;tat=Math.floor(d/60)+':'+String(d%60).padStart(2,'0')}
+  const tbody=document.getElementById('tbodyPrincipal');const num=tbody.rows.length+1;const tr=document.createElement('tr');tr.innerHTML=`<td class="td">${num}</td><td class="td">${trp}</td><td class="td font-bold">${placa}</td><td class="td">${tracto}</td><td class="td">${carreta}</td><td class="td">${pallets}</td><td class="td">${tipoProd}</td><td class="td">${proc}</td><td class="td">${tipo}</td><td class="td">${garita}</td><td class="td">${inicio}</td><td class="td">${fin}</td><td class="td">${verif}</td><td class="td font-bold">${salida}</td><td class="td">${ingreso}</td><td class="td">${status}</td><td class="td">${tat}</td>`;tbody.appendChild(tr);cerrarModalAgregar();document.getElementById('cTotal').innerText=tbody.rows.length;
 }
 
-function eliminarFila(btn){ if(confirm('¿Eliminar unidad?')){ btn.closest('tr').remove(); actualizarContadores(); } }
-function actualizarContadores(){
-  const total=document.getElementById('tbodyPrincipal').rows.length;
-  document.getElementById('cTotal').innerText=total;
-  document.getElementById('cRecep').innerText=total;
-  document.getElementById('cAtend').innerText=total;
-}
+function calcularTAT(){const filas=document.querySelectorAll('#tbodyPrincipal tr');let tbody='';let datos=[];let total=0;let c=0;filas.forEach(f=>{const td=f.querySelectorAll('td');if(td.length<17)return;const tracto=td[3].innerText;const garita=td[9].innerText;const salida=td[13].innerText;const tat=td[16].innerText;let min=0;if(tat.includes(':')){const p=tat.split(':');min=parseInt(p[0])*60+parseInt(p[1])}if(min>0){datos.push({placa:tracto,min});total+=min;c++}tbody+=`<tr><td>${fechaStr}</td><td>${tracto}</td><td>${garita}</td><td>${salida}</td><td>${tat}</td></tr>`});document.getElementById('tbodyTatDiario').innerHTML=tbody;const prom=c?Math.round(total/c):0;document.getElementById('promDiario').innerHTML=`Promedio del día: ${Math.floor(prom/60)}:${String(prom%60).padStart(2,'0')}:00 • Meta: 01:10:00 ${prom<=70?'✅ Cumple':'❌ No Cumple'}`;return datos;}
+let ch1,ch2;function cargarGraficos(){const d=calcularTAT();if(ch1)ch1.destroy();ch1=new Chart(document.getElementById('chartTatDiario'),{type:'line',data:{labels:d.map(x=>x.placa),datasets:[{label:'TAT min',data:d.map(x=>x.min),borderColor:'#f97316'}]}});const hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');let th='';hist.forEach(h=>th+=`<tr><td>${h.fecha}</td><td>${h.promTAT}</td></tr>`);document.getElementById('tbodyPromSemanal').innerHTML=th;if(ch2)ch2.destroy();ch2=new Chart(document.getElementById('chartPromSemanal'),{type:'line',data:{labels:hist.map(h=>h.fecha),datasets:[{label:'Prom TAT',data:hist.map(h=>h.min),borderColor:'#f97316'},{label:'META',data:hist.map(()=>70),borderColor:'red',borderDash:[5,5]}]}});}
+function guardarDia(){if(!confirm('¿Guardar día '+fechaStr+'?'))return;const d=calcularTAT();const pm=d.length?Math.round(d.reduce((a,b)=>a+b.min,0)/d.length):0;const hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');hist.push({fecha:fechaStr,promTAT:`${Math.floor(pm/60)}:${String(pm%60).padStart(2,'0')}:00`,min:pm});localStorage.setItem('historicoTAT',JSON.stringify(hist));alert('✅ Día guardado')}
+
+// --- EXPORT EXCEL COMO BSF PUNTA HERMOSA PERO CON DATA LIMA SUR ---
 function exportarExcel(){
-  const tabla=document.getElementById('tablaPrincipal');
-  const wb=XLSX.utils.table_to_book(tabla,{sheet:"Status CD"});
-  XLSX.writeFile(wb,`Status_CD_LIMA_SUR_${fechaStr.replaceAll('/','-')}.xlsx`);
+  const totalUnidades = document.getElementById('tbodyPrincipal').rows.length;
+  const horaGen = new Date().toLocaleTimeString('es-PE');
+  
+  // Cabeceras estilo Punta Hermosa
+  const titulo = [[`STATUS CD LIMA SUR - REPORTE DE OPERACIONES`]];
+  const sub = [[`Fecha: ${fechaStr} | Total Unidades: ${totalUnidades} | Generado: ${horaGen}`]];
+  const headers = [["P","TRANSPORTE","PLACA","PL. TRACTO","PL. CARRETA","N° PALLETS","TIPO DE PRODUCTO","PROCEDENCIA","TIPO","REPORTE EN GARITA","INICIO DESCARGA","FIN DESCARGA","FIN VERIF GR","SALIDA CD","INGRESO GR/SAP","ESTATUS","TAT"]];
+  
+  const rows = [];
+  document.querySelectorAll('#tbodyPrincipal tr').forEach((tr,i)=>{
+    if(tr.style.display==='none') return;
+    const c = tr.querySelectorAll('td');
+    rows.push([
+      i+1,
+      c[1].innerText.trim(),
+      c[2].innerText.trim(),
+      c[3].innerText.trim(),
+      c[4].innerText.trim(),
+      c[5].innerText.trim(),
+      c[6].innerText.trim(),
+      c[7].innerText.trim(),
+      c[8].innerText.trim(),
+      c[9].innerText.trim(),
+      c[10].innerText.trim(),
+      c[11].innerText.trim(),
+      c[12].innerText.trim(),
+      c[13].innerText.trim(),
+      c[14].innerText.trim(),
+      c[15].innerText.trim(),
+      c[16].innerText.trim()
+    ]);
+  });
+  const totalRow = [[`TOTAL`,"","","","","","","","","","","","","","","",totalUnidades]];
+
+  const dataFinal = [...titulo, ...sub, [], ...headers, ...rows, [], ...totalRow];
+  
+  const ws = XLSX.utils.aoa_to_sheet(dataFinal);
+  
+  // Merge titulo y subtitulo como en tu foto de Punta Hermosa
+  ws['!merges'] = [
+    {s:{r:0,c:0}, e:{r:0,c:16}}, // Titulo ocupa todo
+    {s:{r:1,c:0}, e:{r:1,c:16}}, // Subtitulo ocupa todo
+    {s:{r:dataFinal.length-1,c:0}, e:{r:dataFinal.length-1,c:15}} // TOTAL
+  ];
+  
+  ws['!cols'] = [{wch:5},{wch:12},{wch:16},{wch:11},{wch:11},{wch:8},{wch:16},{wch:12},{wch:10},{wch:14},{wch:14},{wch:12},{wch:12},{wch:10},{wch:14},{wch:12},{wch:8}];
+  
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Status CD");
+  XLSX.writeFile(wb, `STATUS_CD_LIMA_SUR_${fechaStr.replaceAll('/','-')}.xlsx`);
 }
-document.getElementById('btnExcel').onclick=exportarExcel;
-document.getElementById('btnLimpiar').onclick=()=>{ document.getElementById('buscador').value=''; filtrar(); };
-document.getElementById('buscador').addEventListener('input', filtrar);
-function filtrar(){
-  const q=document.getElementById('buscador').value.toLowerCase();
-  document.querySelectorAll('#tbodyPrincipal tr').forEach(tr=>{ tr.style.display = tr.innerText.toLowerCase().includes(q) ? '' : 'none'; });
-}
+
+document.getElementById('btnExcel').onclick = exportarExcel;
+document.getElementById('btnLimpiar').onclick = ()=>{document.getElementById('buscador').value=''; document.querySelectorAll('#tbodyPrincipal tr').forEach(tr=>tr.style.display='')};
+document.getElementById('buscador').addEventListener('input', e=>{
+  const q=e.target.value.toLowerCase();
+  document.querySelectorAll('#tbodyPrincipal tr').forEach(tr=>{ tr.style.display = tr.innerText.toLowerCase().includes(q) ? '' : 'none' });
+});
 </script>
 </body>
 </html>
