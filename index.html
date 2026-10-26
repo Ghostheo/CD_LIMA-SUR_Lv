@@ -6,11 +6,12 @@
 <title>Status CD LIMA SUR - TAT Recepciones T1</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
  body{font-family:'Inter',sans-serif;background:#f8fafc}
  .card-counter{border-radius:12px;padding:12px;text-align:center;font-weight:800}
- .th-yellow{background:#facc15;color:#000;font-size:10px;padding:8px 6px;white-space:nowrap}
+ .th-yellow{background:#facc15;color:#000;font-size:10px;padding:8px 6px;white-space:nowrap;position:sticky;top:0}
  .td{font-size:11px;padding:6px;border-bottom:1px solid #e2e8f0}
  .modal-bg{background:rgba(0,0,0,0.6);backdrop-filter:blur(4px)}
 </style>
@@ -18,16 +19,14 @@
 <body class="p-3">
 
 <!-- HEADER -->
-<div class="bg-white rounded-xl shadow p-4 flex justify-between items-center mb-3">
+<div class="bg-white rounded-xl shadow p-4 flex justify-between items-center mb-3 flex-wrap gap-2">
   <div>
     <div class="flex items-center gap-2">
-      <img src="https://lavaro.pe/wp-content/uploads/logo.png" onerror="this.style.display='none'" class="h-6">
       <h1 class="text-xl font-black">Status CD LIMA SUR</h1>
     </div>
-    <p class="text-[11px] text-gray-500" id="fechaHeader">26 de octubre de 2026 | 12:52 p.m.</p>
+    <p class="text-[11px] text-gray-500" id="fechaHeader"></p>
     <p class="text-[11px] text-green-600 font-bold">● Sincronizado en vivo</p>
   </div>
-  <!-- ESTE ES EL RECUADRO ROJO QUE ME MARCASTE -->
   <div class="flex gap-2 border-2 border-red-600 p-2 rounded-lg bg-white">
     <button onclick="abrirAdmin()" class="border-2 border-gray-800 rounded-xl px-4 py-2 text-[13px] font-bold flex items-center gap-2">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -42,22 +41,16 @@
 
 <!-- POR TIPO / POR ESTATUS -->
 <div class="bg-white rounded-xl shadow p-3 mb-3">
-  <div class="grid grid-cols-4 gap-2 mb-2">
-    <div class="text-[10px] text-gray-500">POR TIPO</div>
-  </div>
   <div class="grid grid-cols-4 gap-3 mb-4">
     <div class="card-counter bg-blue-50 text-blue-700">RECEPCIÓN<br><span id="cRecep" class="text-2xl">1</span></div>
     <div class="card-counter bg-emerald-50 text-emerald-700">DESPACHO<br><span id="cDespa" class="text-2xl">0</span></div>
     <div class="card-counter bg-yellow-50 text-yellow-700">TRASLADO<br><span id="cTras" class="text-2xl">0</span></div>
     <div class="card-counter bg-purple-50 text-purple-700">RECE/DESP<br><span id="cReceDesp" class="text-2xl">0</span></div>
   </div>
-  <div class="grid grid-cols-4 gap-2 mb-2">
-    <div class="text-[10px] text-gray-500">POR ESTATUS</div>
-  </div>
   <div class="grid grid-cols-4 gap-3">
     <div class="card-counter bg-black text-white">TOTAL<br><span id="cTotal" class="text-2xl">1</span></div>
-    <div class="card-counter bg-red-600 text-white">PENDIENTE<br><span class="text-2xl">0</span></div>
-    <div class="card-counter bg-red-100 text-red-700">EN PROCESO<br><span class="text-2xl">0</span></div>
+    <div class="card-counter bg-red-600 text-white">PENDIENTE<br><span id="cPend" class="text-2xl">0</span></div>
+    <div class="card-counter bg-red-100 text-red-700">EN PROCESO<br><span id="cProc" class="text-2xl">0</span></div>
     <div class="card-counter bg-orange-500 text-white">PEND. FACTURA<br><span class="text-2xl">0</span></div>
     <div class="card-counter bg-emerald-100 text-emerald-700">CARGADO/FACT.<br><span class="text-2xl">0</span></div>
     <div class="card-counter bg-green-700 text-white">ATENDIDO<br><span id="cAtend" class="text-2xl">1</span></div>
@@ -68,28 +61,55 @@
 
 <!-- PANEL DE CONTROL -->
 <div class="bg-white rounded-xl shadow p-3">
-  <div class="flex justify-between mb-2">
+  <div class="flex justify-between mb-2 flex-wrap gap-2">
     <h2 class="font-bold text-[11px]">PANEL DE CONTROL DE UNIDADES</h2>
-    <div class="flex gap-2">
+    <div class="flex gap-2 flex-wrap">
       <input id="buscador" placeholder="Buscar por transporte, placa, procedencia..." class="border text-[11px] px-3 py-1 rounded w-64">
-      <button class="bg-red-600 text-white text-[10px] px-3 rounded font-bold">LIMPIAR</button>
-      <button class="bg-blue-700 text-white text-[10px] px-3 rounded font-bold" onclick="agregarFila()">+ Agregar Unidad</button>
-      <button class="bg-green-700 text-white text-[10px] px-3 rounded font-bold">Exportar a Excel</button>
+      <button id="btnLimpiar" class="bg-red-600 text-white text-[10px] px-3 py-1.5 rounded font-bold">LIMPIAR</button>
+      <button onclick="abrirModalAgregar()" class="bg-blue-700 text-white text-[10px] px-3 py-1.5 rounded font-bold">+ Agregar Unidad</button>
+      <button id="btnExcel" class="bg-green-700 text-white text-[10px] px-3 py-1.5 rounded font-bold">Exportar a Excel</button>
     </div>
   </div>
-  <div class="overflow-x-auto">
+  <div class="overflow-x-auto max-h-[60vh]">
     <table class="w-full" id="tablaPrincipal">
       <thead>
         <tr>
-          <th class="th-yellow">P</th><th class="th-yellow">TRANSPORTE</th><th class="th-yellow">PLACA</th><th class="th-yellow">PL. TRACTO</th><th class="th-yellow">PL. CARRETA</th><th class="th-yellow">N° PALLETS</th><th class="th-yellow">TIPO DE PRODUCTO</th><th class="th-yellow">PROCEDENCIA</th><th class="th-yellow">TIPO</th><th class="th-yellow">REPORTE EN GARITA</th><th class="th-yellow">INICIO DESCARGA</th><th class="th-yellow">FIN DESCARGA</th><th class="th-yellow">FIN VERIFICACION GR</th><th class="th-yellow">SALIDA CD</th><th class="th-yellow">HORA DE INGRESO GR/SAP</th><th class="th-yellow">STATUS</th><th class="th-yellow">ACCIONES</th><th class="th-yellow">TAT</th>
+          <th class="th-yellow">P</th><th class="th-yellow">TRANSPORTE</th><th class="th-yellow">PLACA</th><th class="th-yellow">PL. TRACTO</th><th class="th-yellow">PL. CARRETA</th><th class="th-yellow">N° PALLETS</th><th class="th-yellow">TIPO DE PRODUCTO</th><th class="th-yellow">PROCEDENCIA</th><th class="th-yellow">TIPO</th><th class="th-yellow">REPORTE EN GARITA</th><th class="th-yellow">INICIO DESCARGA</th><th class="th-yellow">FIN DESCARGA</th><th class="th-yellow">FIN VERIF GR</th><th class="th-yellow">SALIDA CD</th><th class="th-yellow">INGRESO GR/SAP</th><th class="th-yellow">STATUS</th><th class="th-yellow">ACCIONES</th><th class="th-yellow">TAT</th>
         </tr>
       </thead>
       <tbody id="tbodyPrincipal">
         <tr>
-          <td class="td">1</td><td class="td">14319153</td><td class="td font-bold">A1Q159/DV1943</td><td class="td">A1Q159</td><td class="td">DV1943</td><td class="td">31</td><td class="td">ABARROTES</td><td class="td">HUACHIPA</td><td class="td text-blue-600">Recepción</td><td class="td">09:40</td><td class="td">10:47</td><td class="td">10:50</td><td class="td">11:10</td><td class="td font-bold">10:56</td><td class="td">11:00</td><td class="td"><span class="bg-red-100 text-red-600 px-2 py-1 rounded text-[10px]">ATENDIDO</span></td><td class="td"><button class="bg-orange-200 text-[9px] px-1 rounded">Editar</button> <button class="bg-red-600 text-white text-[9px] px-1 rounded">Eliminar</button></td><td class="td"><span class="bg-blue-900 text-white px-2 py-1 rounded text-[10px] tat-cell">1:16</span></td>
+          <td class="td">1</td><td class="td">14319153</td><td class="td font-bold">A1Q159/DV1943</td><td class="td">A1Q159</td><td class="td">DV1943</td><td class="td">31</td><td class="td">ABARROTES</td><td class="td">HUACHIPA</td><td class="td text-blue-600">Recepción</td><td class="td">09:40</td><td class="td">10:47</td><td class="td">10:50</td><td class="td">11:10</td><td class="td font-bold">10:56</td><td class="td">11:00</td><td class="td"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px]">ATENDIDO</span></td><td class="td"><button onclick="eliminarFila(this)" class="bg-red-600 text-white text-[9px] px-2 py-1 rounded">Eliminar</button></td><td class="td"><span class="bg-blue-900 text-white px-2 py-1 rounded text-[10px] tat-cell">1:16</span></td>
         </tr>
       </tbody>
     </table>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR UNIDAD -->
+<div id="modalAgregar" class="fixed inset-0 modal-bg hidden z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-xl max-w-3xl w-full p-5 max-h-[90vh] overflow-y-auto shadow-2xl">
+    <div class="flex justify-between mb-4">
+      <h3 class="font-black text-[16px]">+ AGREGAR NUEVA UNIDAD - Digita placas</h3>
+      <button onclick="cerrarModalAgregar()" class="bg-black text-white px-3 py-1 rounded">X</button>
+    </div>
+    <div class="grid grid-cols-2 gap-3 text-[12px]">
+      <label class="flex flex-col gap-1">TRANSPORTE / N° TRANSPORTE <input id="fTransporte" class="border p-2 rounded" placeholder="14319153"></label>
+      <label class="flex flex-col gap-1">N° PALLETS <input id="fPallets" type="number" class="border p-2 rounded" placeholder="31"></label>
+      <label class="flex flex-col gap-1 font-bold">PL. TRACTO (cabeza) <input id="fTracto" class="border-2 border-blue-400 p-2 rounded bg-yellow-50" placeholder="A1Q159"></label>
+      <label class="flex flex-col gap-1 font-bold">PL. CARRETA (carreta) <input id="fCarreta" class="border-2 border-blue-400 p-2 rounded bg-yellow-50" placeholder="DV1943"></label>
+      <label class="flex flex-col gap-1">TIPO DE PRODUCTO <select id="fTipoProd" class="border p-2 rounded"><option>ABARROTES</option><option>BEBIDAS</option><option>PRODUCTOS SECOS</option><option>REFRIGERADO</option><option>CARGA SECA</option></select></label>
+      <label class="flex flex-col gap-1">PROCEDENCIA <input id="fProc" class="border p-2 rounded" value="HUACHIPA"></label>
+      <label class="flex flex-col gap-1">TIPO <select id="fTipo" class="border p-2 rounded"><option>Recepción</option><option>Despacho</option><option>Traslado</option><option>Rece/Desp</option></select></label>
+      <label class="flex flex-col gap-1">REPORTE EN GARITA (HH:MM) <input id="fGarita" type="time" class="border p-2 rounded bg-orange-100"></label>
+      <label class="flex flex-col gap-1">INICIO DESCARGA <input id="fInicio" type="time" class="border p-2 rounded"></label>
+      <label class="flex flex-col gap-1">FIN DESCARGA <input id="fFin" type="time" class="border p-2 rounded"></label>
+      <label class="flex flex-col gap-1">FIN VERIFICACION GR <input id="fVerif" type="time" class="border p-2 rounded"></label>
+      <label class="flex flex-col gap-1">SALIDA CD <input id="fSalida" type="time" class="border p-2 rounded"></label>
+      <label class="flex flex-col gap-1">HORA INGRESO GR/SAP <input id="fIngreso" type="time" class="border p-2 rounded"></label>
+      <label class="flex flex-col gap-1">STATUS <select id="fStatus" class="border p-2 rounded"><option>ATENDIDO</option><option>PENDIENTE</option><option>EN PROCESO</option><option>EN DESCARGA</option><option>PERNOCTANDO</option></select></label>
+    </div>
+    <button onclick="guardarNuevaUnidad()" class="mt-5 bg-blue-700 hover:bg-blue-800 text-white w-full py-3 rounded-xl font-black text-[14px]">GUARDAR UNIDAD</button>
   </div>
 </div>
 
@@ -100,152 +120,142 @@
       <h2 class="font-black text-lg">ADMIN DASHBOARD - Solo Administrador</h2>
       <button onclick="cerrarAdmin()" class="bg-black text-white px-4 py-1 rounded">X Cerrar</button>
     </div>
-
-    <!-- VENTANA 1 -->
     <div class="border-2 border-red-600 rounded-lg p-2 mb-4">
-      <div class="bg-[#0a3a8a] text-white text-center font-bold py-2 mb-2">TAT RECEPCIONES T1 DIARIO - META 01:10:00 | Fecha actual: <span id="fechaHoy">26/10/2026</span></div>
-      <div class="grid grid-cols-3 gap-4">
+      <div class="bg-[#0a3a8a] text-white text-center font-bold py-2 mb-2 text-[13px]">TAT RECEPCIONES T1 DIARIO - META 01:10:00 | Fecha: <span id="fechaHoy"></span></div>
+      <div class="grid md:grid-cols-3 gap-4">
         <div>
-          <table class="w-full text-[11px]">
-            <thead class="bg-gray-100"><tr><th>FECHA</th><th>PL. TRACTO</th><th>H. REPORTE EN GARITA</th><th>H. SALIDA CD</th><th>Promedio de TAT.</th></tr></thead>
-            <tbody id="tbodyTatDiario"></tbody>
-          </table>
-          <div id="promDiario" class="mt-2 text-[12px] font-bold"></div>
+          <table class="w-full text-[11px]"><thead class="bg-gray-100"><tr><th>FECHA</th><th>PL. TRACTO</th><th>GARITA</th><th>SALIDA CD</th><th>TAT</th></tr></thead><tbody id="tbodyTatDiario"></tbody></table>
+          <div id="promDiario" class="mt-3 text-[12px] font-bold p-2 bg-gray-50 rounded"></div>
         </div>
-        <div class="col-span-2">
-          <canvas id="chartTatDiario"></canvas>
-        </div>
+        <div class="md:col-span-2"><canvas id="chartTatDiario"></canvas></div>
       </div>
     </div>
-
-    <!-- VENTANA 2 -->
     <div class="border-2 border-gray-800 rounded-lg p-2">
-      <div class="bg-[#0a3a8a] text-white text-center font-bold py-2 mb-2">PROM CICLO TOTAL RECEPCIONES T1 SEMANAL - OCTUBRE 2025 | Histórico Guardado</div>
-      <div class="grid grid-cols-3 gap-4">
-        <div>
-          <table class="w-full text-[11px]">
-            <thead class="bg-gray-100"><tr><th>FECHA</th><th>Prom. INGRESO CD</th><th>Prom. INICIO DESCARGA</th><th>Prom. SALIDA CD</th><th>Prom. TAT</th></tr></thead>
-            <tbody id="tbodyPromSemanal"></tbody>
-          </table>
-        </div>
-        <div class="col-span-2">
-          <canvas id="chartPromSemanal"></canvas>
-        </div>
+      <div class="bg-[#0a3a8a] text-white text-center font-bold py-2 mb-2 text-[13px]">PROM CICLO TOTAL RECEPCIONES T1 SEMANAL - Histórico Guardado</div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div><table class="w-full text-[11px]"><thead class="bg-gray-100"><tr><th>FECHA</th><th>Prom. TAT</th><th>Total Und.</th></tr></thead><tbody id="tbodyPromSemanal"></tbody></table></div>
+        <div class="md:col-span-2"><canvas id="chartPromSemanal"></canvas></div>
       </div>
     </div>
-
   </div>
 </div>
 
 <!-- MODAL PASSWORD -->
 <div id="modalPass" class="fixed inset-0 modal-bg hidden z-[60] flex items-center justify-center">
-  <div class="bg-white p-6 rounded-xl w-80">
+  <div class="bg-white p-6 rounded-xl w-80 shadow-2xl">
     <h3 class="font-bold mb-2">🔒 Acceso Administrador</h3>
     <input type="password" id="inputPass" placeholder="Contraseña" class="border w-full p-2 rounded mb-3">
     <button onclick="validarPass()" class="bg-blue-700 text-white w-full py-2 rounded font-bold">Entrar</button>
-    <p class="text-[10px] text-gray-400 mt-2">Clave por defecto: Lavoro2026</p>
+    <p class="text-[10px] text-gray-400 mt-2">Clave: Lavoro2026</p>
+    <button onclick="document.getElementById('modalPass').classList.add('hidden')" class="w-full mt-2 text-[11px]">Cancelar</button>
   </div>
 </div>
 
 <script>
-// FECHA ACTUAL
 const hoy = new Date();
 const fechaStr = hoy.toLocaleDateString('es-PE');
 document.getElementById('fechaHoy').innerText = fechaStr;
-document.getElementById('fechaHeader').innerText = hoy.toLocaleDateString('es-PE',{dateStyle:'full'}) + ' | ' + hoy.toLocaleTimeString('es-PE');
+document.getElementById('fechaHeader').innerText = hoy.toLocaleDateString('es-PE',{weekday:'long', day:'2-digit', month:'long', year:'numeric'}) + ' | ' + hoy.toLocaleTimeString('es-PE');
 
-// FUNCIONES ADMIN
-function abrirAdmin(){ document.getElementById('modalPass').classList.remove('hidden'); }
+function abrirModalAgregar(){ document.getElementById('modalAgregar').classList.remove('hidden'); }
+function cerrarModalAgregar(){ document.getElementById('modalAgregar').classList.add('hidden'); }
+function abrirAdmin(){ document.getElementById('modalPass').classList.remove('hidden'); document.getElementById('inputPass').focus(); }
 function cerrarAdmin(){ document.getElementById('modalAdmin').classList.add('hidden'); }
 function validarPass(){
   if(document.getElementById('inputPass').value === 'Lavoro2026'){
     document.getElementById('modalPass').classList.add('hidden');
+    document.getElementById('inputPass').value='';
     document.getElementById('modalAdmin').classList.remove('hidden');
     cargarGraficos();
-  }else{ alert('Contraseña incorrecta'); }
+  }else alert('Contraseña incorrecta');
 }
 
-// CALCULO TAT GARITA -> SALIDA CD
 function calcularTAT(){
   const filas = document.querySelectorAll('#tbodyPrincipal tr');
-  let tbodyDiario = '';
-  let datosGrafico = [];
-  let totalMin = 0; let count = 0;
+  let tbodyDiario = ''; let datosGrafico=[]; let totalMin=0; let count=0;
   filas.forEach(f=>{
-    const celdas = f.querySelectorAll('td');
-    if(celdas.length < 15) return;
-    const tracto = celdas[3].innerText;
-    const garita = celdas[9].innerText;
-    const salida = celdas[13].innerText;
-    const tatText = celdas[17].innerText;
-    // Parse simple
-    let min = 0;
-    if(tatText.includes(':')){ const p=tatText.split(':'); min=parseInt(p[0])*60+parseInt(p[1]); }
-    if(min>0){ datosGrafico.push({placa:tracto, min}); totalMin+=min; count++; }
-    tbodyDiario += `<tr><td>${fechaStr}</td><td>${tracto}</td><td>${garita}</td><td>${salida}</td><td>${tatText}</td></tr>`;
+    const c = f.querySelectorAll('td');
+    if(c.length<15) return;
+    const tracto=c[3].innerText; const garita=c[9].innerText; const salida=c[13].innerText; const tat=c[17].innerText;
+    let min=0; if(tat.includes(':')){ const p=tat.split(':'); min=parseInt(p[0])*60+parseInt(p[1]); }
+    if(min>0){ datosGrafico.push({placa:tracto,min}); totalMin+=min; count++; }
+    tbodyDiario+=`<tr class="border-b"><td class="p-1">${fechaStr}</td><td class="p-1 font-bold">${tracto}</td><td class="p-1">${garita}</td><td class="p-1">${salida}</td><td class="p-1 font-bold">${tat}</td></tr>`;
   });
-  document.getElementById('tbodyTatDiario').innerHTML = tbodyDiario;
-  const prom = count? Math.round(totalMin/count) : 0;
-  const h = Math.floor(prom/60); const m = prom%60;
-  document.getElementById('promDiario').innerHTML = `Promedio del día: ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:00 • Meta: 01:10:00 ${prom<=70? '✅ Cumple' : '❌ No Cumple'}`;
+  document.getElementById('tbodyTatDiario').innerHTML=tbodyDiario;
+  const prom = count? Math.round(totalMin/count):0;
+  const h=Math.floor(prom/60); const m=prom%60;
+  document.getElementById('promDiario').innerHTML=`Promedio del día: ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:00 • Meta: 01:10:00 ${prom<=70?'✅ Cumple':'❌ No Cumple'} | Total: ${count} und.`;
   return datosGrafico;
 }
 
 let chart1, chart2;
 function cargarGraficos(){
-  const datos = calcularTAT();
-  
+  const datos=calcularTAT();
   if(chart1) chart1.destroy();
-  chart1 = new Chart(document.getElementById('chartTatDiario'),{
-    type:'line',
-    data:{ labels: datos.map(d=>d.placa), datasets:[{ label:'TAT (min) vs META 70min', data: datos.map(d=>d.min), borderColor:'#f97316', tension:0.3 }]},
-    options:{ plugins:{ title:{display:true,text:'TAT SEMANAL - PLACAS VS TIEMPOS - HOY '+fechaStr} } }
-  });
-
-  // Histórico de GUARDAR DÍA
-  const hist = JSON.parse(localStorage.getItem('historicoTAT')||'[]');
-  let tbodyHist='';
-  hist.forEach(h=>{
-    tbodyHist+=`<tr><td>${h.fecha}</td><td>${h.promIngreso}</td><td>${h.promInicio}</td><td>${h.promSalida}</td><td class="font-bold">${h.promTAT}</td></tr>`;
-  });
-  document.getElementById('tbodyPromSemanal').innerHTML = tbodyHist || '<tr><td colspan=5 class="text-center text-gray-400">Aún no hay días guardados, usa GUARDAR DÍA</td></tr>';
-
+  chart1=new Chart(document.getElementById('chartTatDiario'),{type:'line',data:{labels:datos.map(d=>d.placa),datasets:[{label:'TAT (min) - Hoy '+fechaStr,data:datos.map(d=>d.min),borderColor:'#f97316',backgroundColor:'rgba(249,115,22,0.2)',tension:0.3}]},options:{responsive:true,plugins:{title:{display:true,text:'TAT DIARIO - PLACAS VS TIEMPOS'}}}});
+  const hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');
+  let tbodyHist=''; hist.forEach(h=>{tbodyHist+=`<tr><td class="p-1">${h.fecha}</td><td class="p-1 font-bold">${h.promTAT}</td><td class="p-1">${h.total}</td></tr>`});
+  document.getElementById('tbodyPromSemanal').innerHTML=tbodyHist || '<tr><td colspan=3 class="text-center text-gray-400 p-3">Aún no hay días guardados. Usa GUARDAR DÍA</td></tr>';
   if(chart2) chart2.destroy();
-  chart2 = new Chart(document.getElementById('chartPromSemanal'),{
-    type:'line',
-    data:{ labels: hist.map(h=>h.fecha), datasets:[
-      {label:'Prom TAT', data: hist.map(h=>h.min), borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.2)'},
-      {label:'META 01:10', data: hist.map(()=>70), borderColor:'red', borderDash:[5,5]}
-    ]},
-    options:{ plugins:{ title:{display:true,text:'TENDENCIA PROMEDIO TAT - Histórico'} } }
-  });
+  chart2=new Chart(document.getElementById('chartPromSemanal'),{type:'line',data:{labels:hist.map(h=>h.fecha),datasets:[{label:'Prom TAT (min)',data:hist.map(h=>h.min),borderColor:'#f97316'},{label:'META 70 min',data:hist.map(()=>70),borderColor:'red',borderDash:[5,5]}]},options:{responsive:true}});
 }
 
 function guardarDia(){
-  if(!confirm('¿Guardar todo lo del día '+fechaStr+' ? Se almacenará para el histórico semanal.')) return;
-  const datos = calcularTAT();
-  const promMin = datos.length? Math.round(datos.reduce((a,b)=>a+b.min,0)/datos.length) : 0;
-  const h = Math.floor(promMin/60); const m = promMin%60;
-  const nuevo = {
-    fecha: fechaStr,
-    promTAT: `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:00`,
-    min: promMin,
-    promIngreso: '00:30:00',
-    promInicio: '00:45:00',
-    promSalida: document.getElementById('promDiario').innerText
-  };
-  const hist = JSON.parse(localStorage.getItem('historicoTAT')||'[]');
-  hist.push(nuevo);
-  localStorage.setItem('historicoTAT', JSON.stringify(hist));
-  // Aquí también lo subirías a Firebase: firebase.firestore().collection('historico_diario').add(nuevo)
-  alert('✅ Día '+fechaStr+' guardado y almacenado. Ya puedes verlo en ADMIN DASHBOARD > PROM SEMANAL');
+  if(!confirm('¿Guardar todo lo del día '+fechaStr+' ? Se almacenará en histórico.')) return;
+  const datos=calcularTAT(); const promMin=datos.length?Math.round(datos.reduce((a,b)=>a+b.min,0)/datos.length):0;
+  const h=Math.floor(promMin/60); const m=promMin%60;
+  const nuevo={fecha:fechaStr,promTAT:`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:00`,min:promMin,total:datos.length};
+  const hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]'); hist.push(nuevo); localStorage.setItem('historicoTAT',JSON.stringify(hist));
+  alert('✅ Día '+fechaStr+' guardado. '+datos.length+' unidades almacenadas.');
 }
 
-function agregarFila(){
-  const tbody = document.getElementById('tbodyPrincipal');
-  tbody.innerHTML += `<tr>
-  <td class="td">${tbody.rows.length+1}</td><td class="td" contenteditable="true">NUEVO</td><td class="td" contenteditable="true">A1QXXX/DVXXXX</td><td class="td" contenteditable="true">A1QXXX</td><td class="td" contenteditable="true">DVXXXX</td><td class="td" contenteditable="true">0</td><td class="td" contenteditable="true">ABARROTES</td><td class="td" contenteditable="true">HUACHIPA</td><td class="td" contenteditable="true">Recepción</td><td class="td" contenteditable="true">09:40</td><td class="td" contenteditable="true">10:47</td><td class="td" contenteditable="true">10:50</td><td class="td" contenteditable="true">11:10</td><td class="td" contenteditable="true">11:00</td><td class="td" contenteditable="true">11:00</td><td class="td"><span class="bg-red-100 text-red-600 px-2 py-1 rounded text-[10px]">ATENDIDO</span></td><td class="td"><button class="bg-orange-200 text-[9px] px-1 rounded">Editar</button></td><td class="td"><span class="bg-blue-900 text-white px-2 py-1 rounded text-[10px] tat-cell">00:00</span></td>
-  </tr>`;
+function guardarNuevaUnidad(){
+  const transporte=document.getElementById('fTransporte').value || 'S/N';
+  const tracto=document.getElementById('fTracto').value.trim().toUpperCase();
+  const carreta=document.getElementById('fCarreta').value.trim().toUpperCase();
+  if(!tracto){ alert('⚠️ Digita PL. TRACTO'); return; }
+  const placaFull = carreta ? tracto+'/'+carreta : tracto;
+  const pallets=document.getElementById('fPallets').value||'0';
+  const tipoProd=document.getElementById('fTipoProd').value;
+  const proc=document.getElementById('fProc').value;
+  const tipo=document.getElementById('fTipo').value;
+  const garita=document.getElementById('fGarita').value||'--:--';
+  const inicio=document.getElementById('fInicio').value||'--:--';
+  const fin=document.getElementById('fFin').value||'--:--';
+  const verif=document.getElementById('fVerif').value||'--:--';
+  const salida=document.getElementById('fSalida').value||'--:--';
+  const ingreso=document.getElementById('fIngreso').value||'--:--';
+  const status=document.getElementById('fStatus').value;
+  let tat='--:--'; if(garita.includes(':') && salida.includes(':')){ const [hg,mg]=garita.split(':').map(Number); const [hs,ms]=salida.split(':').map(Number); let diff=(hs*60+ms)-(hg*60+mg); if(diff<0) diff+=1440; tat=Math.floor(diff/60)+':'+String(diff%60).padStart(2,'0'); }
+  const tbody=document.getElementById('tbodyPrincipal');
+  const num=tbody.rows.length+1;
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td class="td">${num}</td><td class="td">${transporte}</td><td class="td font-bold">${placaFull}</td><td class="td font-bold text-blue-700">${tracto}</td><td class="td">${carreta}</td><td class="td">${pallets}</td><td class="td">${tipoProd}</td><td class="td">${proc}</td><td class="td text-blue-600">${tipo}</td><td class="td bg-orange-50 font-bold">${garita}</td><td class="td">${inicio}</td><td class="td">${fin}</td><td class="td">${verif}</td><td class="td font-bold">${salida}</td><td class="td">${ingreso}</td><td class="td"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px]">${status}</span></td><td class="td"><button onclick="eliminarFila(this)" class="bg-red-600 text-white text-[9px] px-2 py-1 rounded">Eliminar</button></td><td class="td"><span class="bg-blue-900 text-white px-2 py-1 rounded text-[10px] tat-cell">${tat}</span></td>`;
+  tbody.appendChild(tr);
+  cerrarModalAgregar();
+  // limpiar inputs
+  ['fTransporte','fTracto','fCarreta','fPallets'].forEach(id=>document.getElementById(id).value='');
+  actualizarContadores();
+}
+
+function eliminarFila(btn){ if(confirm('¿Eliminar unidad?')){ btn.closest('tr').remove(); actualizarContadores(); } }
+function actualizarContadores(){
+  const total=document.getElementById('tbodyPrincipal').rows.length;
+  document.getElementById('cTotal').innerText=total;
+  document.getElementById('cRecep').innerText=total;
+  document.getElementById('cAtend').innerText=total;
+}
+function exportarExcel(){
+  const tabla=document.getElementById('tablaPrincipal');
+  const wb=XLSX.utils.table_to_book(tabla,{sheet:"Status CD"});
+  XLSX.writeFile(wb,`Status_CD_LIMA_SUR_${fechaStr.replaceAll('/','-')}.xlsx`);
+}
+document.getElementById('btnExcel').onclick=exportarExcel;
+document.getElementById('btnLimpiar').onclick=()=>{ document.getElementById('buscador').value=''; filtrar(); };
+document.getElementById('buscador').addEventListener('input', filtrar);
+function filtrar(){
+  const q=document.getElementById('buscador').value.toLowerCase();
+  document.querySelectorAll('#tbodyPrincipal tr').forEach(tr=>{ tr.style.display = tr.innerText.toLowerCase().includes(q) ? '' : 'none'; });
 }
 </script>
 </body>
