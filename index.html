@@ -5,7 +5,6 @@
 <title>Status CD LIMA SUR</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- LIBRERIA SEGURA QUE NO ROMPE CLICKS -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <style>
@@ -16,8 +15,6 @@ body{font-family:Inter,sans-serif;background:#f8fafc}
 </style>
 </head>
 <body class="p-3">
-
-<!-- HEADER ORIGINAL -->
 <div class="bg-white rounded-xl shadow p-4 flex justify-between items-center mb-3">
 <div><h1 class="text-xl font-black">Status CD LIMA SUR</h1><p id="fechaHeader" class="text-[11px] text-gray-500"></p><p class="text-[11px] text-green-600 font-bold">● Sincronizado en vivo</p></div>
 <div class="flex gap-2 border-2 border-red-600 p-2 rounded-lg">
@@ -26,7 +23,6 @@ body{font-family:Inter,sans-serif;background:#f8fafc}
 </div>
 </div>
 
-<!-- CONTADORES ORIGINALES 8 -->
 <div class="bg-white rounded-xl shadow p-3 mb-3">
 <div class="text-[10px] text-gray-500 mb-2">POR TIPO</div>
 <div class="grid grid-cols-4 gap-3 mb-4">
@@ -48,7 +44,6 @@ body{font-family:Inter,sans-serif;background:#f8fafc}
 </div>
 </div>
 
-<!-- PANEL ORIGINAL 18 COLUMNAS -->
 <div class="bg-white rounded-xl shadow p-3">
 <div class="flex justify-between mb-2 flex-wrap gap-2">
 <h2 class="font-bold text-[11px]">PANEL DE CONTROL DE UNIDADES</h2>
@@ -66,7 +61,6 @@ body{font-family:Inter,sans-serif;background:#f8fafc}
 </div>
 </div>
 
-<!-- MODALES ORIGINALES -->
 <div id="modalAgregar" class="fixed inset-0 modal-bg hidden z-50 flex items-center justify-center p-4"><div class="bg-white rounded-xl max-w-3xl w-full p-5 max-h-[90vh] overflow-y-auto"><div class="flex justify-between mb-4"><h3 id="tituloModal" class="font-black">+ AGREGAR UNIDAD</h3><button onclick="cerrarModalAgregar()" class="bg-black text-white px-3 rounded">X</button></div><div class="grid grid-cols-2 gap-3 text-[12px]"><label>TRANSPORTE<input id="fTransporte" class="border p-2 rounded w-full"></label><label>N° PALLETS<input id="fPallets" type="number" class="border p-2 rounded w-full"></label><label class="font-bold">PL. TRACTO<input id="fTracto" class="border-2 border-blue-400 p-2 rounded w-full bg-yellow-50"></label><label class="font-bold">PL. CARRETA<input id="fCarreta" class="border-2 border-blue-400 p-2 rounded w-full bg-yellow-50"></label><label>TIPO PRODUCTO<input id="fTipoProd" value="ABARROTES" class="border p-2 rounded w-full"></label><label>PROCEDENCIA<input id="fProc" value="HUACHIPA" class="border p-2 rounded w-full"></label><label>REPORTE GARITA<input id="fGarita" type="time" class="border p-2 rounded w-full bg-orange-100"></label><label>SALIDA CD<input id="fSalida" type="time" class="border p-2 rounded w-full"></label><label>INICIO DESCARGA<input id="fInicio" type="time" class="border p-2 rounded w-full"></label><label>FIN DESCARGA<input id="fFin" type="time" class="border p-2 rounded w-full"></label><label>FIN VERIF<input id="fVerif" type="time" class="border p-2 rounded w-full"></label><label>INGRESO SAP<input id="fIngreso" type="time" class="border p-2 rounded w-full"></label><label>TIPO<select id="fTipo" class="border p-2 rounded w-full"><option>Recepción</option><option>Despacho</option></select></label><label>STATUS<select id="fStatus" class="border p-2 rounded w-full"><option>ATENDIDO</option><option>PENDIENTE</option><option>EN PROCESO</option></select></label></div><button onclick="guardarNuevaUnidad()" class="mt-5 bg-blue-700 text-white w-full py-3 rounded-xl font-black">GUARDAR</button></div></div>
 
 <div id="modalAdmin" class="fixed inset-0 modal-bg hidden z-50 p-3 overflow-y-auto"><div class="bg-white rounded-xl max-w-7xl mx-auto p-4"><div class="flex justify-between items-center mb-4"><h2 class="font-black text-lg">ADMIN DASHBOARD - Solo Administrador</h2><button onclick="cerrarAdmin()" class="bg-black text-white px-4 py-1 rounded">X Cerrar</button></div>
@@ -77,11 +71,9 @@ body{font-family:Inter,sans-serif;background:#f8fafc}
 <div id="modalPass" class="fixed inset-0 modal-bg hidden z-[60] flex items-center justify-center"><div class="bg-white p-6 rounded-xl w-80"><h3 class="font-bold mb-2">🔒 Acceso Administrador</h3><input type="password" id="inputPass" placeholder="Contraseña" class="border w-full p-2 rounded mb-3"><button onclick="entrarAdmin()" class="bg-blue-700 text-white w-full py-2 rounded font-bold">Entrar</button></div></div>
 
 <script>
-// FUNCIONES GLOBALES ANTES DE TODO - ASI SIEMPRE DAN CLICK
 var fechaStr = new Date().toLocaleDateString('es-PE');
 var filaEditando = null;
 var ch1=null, ch2=null;
-
 document.getElementById('fechaHoy').innerText = fechaStr;
 document.getElementById('fechaHeader').innerText = new Date().toLocaleDateString('es-PE',{dateStyle:'full'})+' | '+new Date().toLocaleTimeString('es-PE');
 
@@ -93,55 +85,30 @@ function entrarAdmin(){if(document.getElementById('inputPass').value==='Lavoro20
 function editarFila(btn){var tr=btn.closest('tr');filaEditando=tr;var c=tr.querySelectorAll('td');document.getElementById('fTransporte').value=c[1].innerText;document.getElementById('fTracto').value=c[3].innerText;document.getElementById('fCarreta').value=c[4].innerText;document.getElementById('fPallets').value=c[5].innerText;document.getElementById('fTipoProd').value=c[6].innerText;document.getElementById('fProc').value=c[7].innerText;document.getElementById('fTipo').value=c[8].innerText;document.getElementById('fGarita').value=c[9].innerText;document.getElementById('fInicio').value=c[10].innerText;document.getElementById('fFin').value=c[11].innerText;document.getElementById('fVerif').value=c[12].innerText;document.getElementById('fSalida').value=c[13].innerText;document.getElementById('fIngreso').value=c[14].innerText;document.getElementById('fStatus').value=c[15].innerText;document.getElementById('tituloModal').innerText='EDITAR UNIDAD';document.getElementById('modalAgregar').classList.remove('hidden')}
 function eliminarFila(btn){if(confirm('¿Eliminar esta unidad?')){btn.closest('tr').remove();actualizarContadores()}}
 function actualizarContadores(){var t=document.getElementById('tbodyPrincipal').rows.length;document.getElementById('cTotal').innerText=t;document.getElementById('cRecep').innerText=t;document.getElementById('cAtend').innerText=t;}
-
-function limpiarTodo(){
-  if(confirm('¿Estás seguro que deseas LIMPIAR todo lo llenado abajo?\n\nSe borrarán todas las unidades del PANEL DE CONTROL.\n\nOK = BORRAR TODO\nCANCELAR = NO BORRAR')){
-    document.getElementById('tbodyPrincipal').innerHTML='';
-    document.getElementById('buscador').value='';
-    document.getElementById('cTotal').innerText='0';
-    document.getElementById('cRecep').innerText='0';
-    document.getElementById('cAtend').innerText='0';
-  }
-}
-
-function guardarNuevaUnidad(){
-  var trp=document.getElementById('fTransporte').value||'S/N';var tracto=document.getElementById('fTracto').value.toUpperCase().trim();var carreta=document.getElementById('fCarreta').value.toUpperCase().trim();if(!tracto){alert('Digita PL. TRACTO');return}
-  var placa=carreta?tracto+'/'+carreta:tracto;var pallets=document.getElementById('fPallets').value||'0';var tipoProd=document.getElementById('fTipoProd').value;var proc=document.getElementById('fProc').value;var tipo=document.getElementById('fTipo').value;var garita=document.getElementById('fGarita').value||'';var inicio=document.getElementById('fInicio').value||'';var fin=document.getElementById('fFin').value||'';var verif=document.getElementById('fVerif').value||'';var salida=document.getElementById('fSalida').value||'';var ingreso=document.getElementById('fIngreso').value||'';var status=document.getElementById('fStatus').value;
-  var tat='--:--';if(garita&&salida&&garita.indexOf(':')>-1&&salida.indexOf(':')>-1){var hg=parseInt(garita.split(':')[0]);var mg=parseInt(garita.split(':')[1]);var hs=parseInt(salida.split(':')[0]);var ms=parseInt(salida.split(':')[1]);var d=(hs*60+ms)-(hg*60+mg);if(d<0)d+=1440;tat=Math.floor(d/60)+':'+String(d%60).padStart(2,'0')}
-  if(filaEditando){var c=filaEditando.querySelectorAll('td');c[1].innerText=trp;c[2].innerText=placa;c[3].innerText=tracto;c[4].innerText=carreta;c[5].innerText=pallets;c[6].innerText=tipoProd;c[7].innerText=proc;c[8].innerText=tipo;c[9].innerText=garita;c[10].innerText=inicio;c[11].innerText=fin;c[12].innerText=verif;c[13].innerText=salida;c[14].innerText=ingreso;c[15].innerText=status;c[17].innerText=tat}else{var tbody=document.getElementById('tbodyPrincipal');var tr=document.createElement('tr');tr.innerHTML='<td class="td">'+(tbody.rows.length+1)+'</td><td class="td">'+trp+'</td><td class="td font-bold">'+placa+'</td><td class="td">'+tracto+'</td><td class="td">'+carreta+'</td><td class="td">'+pallets+'</td><td class="td">'+tipoProd+'</td><td class="td">'+proc+'</td><td class="td">'+tipo+'</td><td class="td">'+garita+'</td><td class="td">'+inicio+'</td><td class="td">'+fin+'</td><td class="td">'+verif+'</td><td class="td font-bold">'+salida+'</td><td class="td">'+ingreso+'</td><td class="td">'+status+'</td><td class="td"><button onclick="editarFila(this)" class="bg-orange-200 text-[9px] px-2 py-1 rounded mr-1">Editar</button><button onclick="eliminarFila(this)" class="bg-red-600 text-white text-[9px] px-2 py-1 rounded">Eliminar</button></td><td class="td">'+tat+'</td>';tbody.appendChild(tr)}
-  cerrarModalAgregar();actualizarContadores();
-}
-
-function cargarGraficos(){
-  try{
-    var filas=document.querySelectorAll('#tbodyPrincipal tr');var htmlDiario='';var datos=[];var tot=0;var c=0;
-    filas.forEach(function(f){var td=f.querySelectorAll('td');if(td.length<17)return;var tracto=td[3].innerText;var gar=td[9].innerText;var sal=td[13].innerText;var tatText=td[17].innerText;var min=0;if(tatText.indexOf(':')>-1){var p=tatText.split(':');min=parseInt(p[0])*60+parseInt(p[1])}if(min>0){datos.push({placa:tracto,min:min});tot+=min;c++}htmlDiario+='<tr><td class="p-1 border">'+fechaStr+'</td><td class="p-1 border">'+tracto+'</td><td class="p-1 border">'+gar+'</td><td class="p-1 border">'+sal+'</td><td class="p-1 border font-bold">'+tatText+'</td></tr>'});
-    document.getElementById('tbodyTatDiario').innerHTML=htmlDiario||'<tr><td colspan=5>Sin datos</td></tr>';
-    var prom=c?Math.round(tot/c):0;document.getElementById('promDiario').innerHTML='Promedio: '+String(Math.floor(prom/60)).padStart(2,'0')+':'+String(prom%60).padStart(2,'0')+':00 | Meta: 01:10:00 '+(prom<=70?'✅ CUMPLE':'❌ NO CUMPLE');
-    if(ch1)ch1.destroy();ch1=new Chart(document.getElementById('chartTatDiario'),{type:'line',data:{labels:datos.map(function(x){return x.placa}),datasets:[{label:'TAT (min)',data:datos.map(function(x){return x.min}),borderColor:'#0a3a8a'},{label:'META 70',data:datos.map(function(){return 70}),borderColor:'red',borderDash:[5,5]}]},options:{responsive:true}});
-    var hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');var htmlHist='';hist.forEach(function(x){htmlHist+='<tr><td class="p-1 border">'+x.fecha+'</td><td class="p-1 border font-bold">'+x.promTAT+'</td></tr>'});document.getElementById('tbodyPromSemanal').innerHTML=htmlHist||'<tr><td colspan=2>Sin días guardados</td></tr>';
-    if(ch2)ch2.destroy();ch2=new Chart(document.getElementById('chartPromSemanal'),{type:'line',data:{labels:hist.map(function(x){return x.fecha}),datasets:[{label:'TAT',data:hist.map(function(x){return x.min}),borderColor:'#0a3a8a'},{label:'META 70',data:hist.map(function(){return 70}),borderColor:'red',borderDash:[5,5]}]},options:{responsive:true}});
-  }catch(e){console.log('Error graficos',e)}
-}
-
-function guardarDia(){
-  var filas=document.querySelectorAll('#tbodyPrincipal tr');var tot=0;var c=0;filas.forEach(function(f){var td=f.querySelectorAll('td');if(td.length<17)return;var tat=td[17].innerText;if(tat.indexOf(':')>-1){var p=tat.split(':');tot+=parseInt(p[0])*60+parseInt(p[1]);c++}});
-  var pm=c?Math.round(tot/c):0;var hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');hist.push({fecha:fechaStr,promTAT:String(Math.floor(pm/60)).padStart(2,'0')+':'+String(pm%60).padStart(2,'0')+':00',min:pm});localStorage.setItem('historicoTAT',JSON.stringify(hist));alert('✅ Día '+fechaStr+' guardado');cargarGraficos();
-}
+function limpiarTodo(){if(confirm('¿Estás seguro que deseas LIMPIAR todo lo llenado abajo?\n\nSe borrarán todas las unidades del PANEL DE CONTROL.\n\nOK = BORRAR TODO\nCANCELAR = NO BORRAR')){document.getElementById('tbodyPrincipal').innerHTML='';document.getElementById('buscador').value='';document.getElementById('cTotal').innerText='0';document.getElementById('cRecep').innerText='0';document.getElementById('cAtend').innerText='0';}}
+function guardarNuevaUnidad(){var trp=document.getElementById('fTransporte').value||'S/N';var tracto=document.getElementById('fTracto').value.toUpperCase().trim();var carreta=document.getElementById('fCarreta').value.toUpperCase().trim();if(!tracto){alert('Digita PL. TRACTO');return}var placa=carreta?tracto+'/'+carreta:tracto;var pallets=document.getElementById('fPallets').value||'0';var tipoProd=document.getElementById('fTipoProd').value;var proc=document.getElementById('fProc').value;var tipo=document.getElementById('fTipo').value;var garita=document.getElementById('fGarita').value||'';var inicio=document.getElementById('fInicio').value||'';var fin=document.getElementById('fFin').value||'';var verif=document.getElementById('fVerif').value||'';var salida=document.getElementById('fSalida').value||'';var ingreso=document.getElementById('fIngreso').value||'';var status=document.getElementById('fStatus').value;var tat='--:--';if(garita&&salida&&garita.indexOf(':')>-1&&salida.indexOf(':')>-1){var hg=parseInt(garita.split(':')[0]);var mg=parseInt(garita.split(':')[1]);var hs=parseInt(salida.split(':')[0]);var ms=parseInt(salida.split(':')[1]);var d=(hs*60+ms)-(hg*60+mg);if(d<0)d+=1440;tat=Math.floor(d/60)+':'+String(d%60).padStart(2,'0')}if(filaEditando){var c=filaEditando.querySelectorAll('td');c[1].innerText=trp;c[2].innerText=placa;c[3].innerText=tracto;c[4].innerText=carreta;c[5].innerText=pallets;c[6].innerText=tipoProd;c[7].innerText=proc;c[8].innerText=tipo;c[9].innerText=garita;c[10].innerText=inicio;c[11].innerText=fin;c[12].innerText=verif;c[13].innerText=salida;c[14].innerText=ingreso;c[15].innerText=status;c[17].innerText=tat}else{var tbody=document.getElementById('tbodyPrincipal');var tr=document.createElement('tr');tr.innerHTML='<td class="td">'+(tbody.rows.length+1)+'</td><td class="td">'+trp+'</td><td class="td font-bold">'+placa+'</td><td class="td">'+tracto+'</td><td class="td">'+carreta+'</td><td class="td">'+pallets+'</td><td class="td">'+tipoProd+'</td><td class="td">'+proc+'</td><td class="td">'+tipo+'</td><td class="td">'+garita+'</td><td class="td">'+inicio+'</td><td class="td">'+fin+'</td><td class="td">'+verif+'</td><td class="td font-bold">'+salida+'</td><td class="td">'+ingreso+'</td><td class="td">'+status+'</td><td class="td"><button onclick="editarFila(this)" class="bg-orange-200 text-[9px] px-2 py-1 rounded mr-1">Editar</button><button onclick="eliminarFila(this)" class="bg-red-600 text-white text-[9px] px-2 py-1 rounded">Eliminar</button></td><td class="td">'+tat+'</td>';tbody.appendChild(tr)}cerrarModalAgregar();actualizarContadores();}
+function cargarGraficos(){try{var filas=document.querySelectorAll('#tbodyPrincipal tr');var htmlDiario='';var datos=[];var tot=0;var c=0;filas.forEach(function(f){var td=f.querySelectorAll('td');if(td.length<17)return;var tracto=td[3].innerText;var gar=td[9].innerText;var sal=td[13].innerText;var tatText=td[17].innerText;var min=0;if(tatText.indexOf(':')>-1){var p=tatText.split(':');min=parseInt(p[0])*60+parseInt(p[1])}if(min>0){datos.push({placa:tracto,min:min});tot+=min;c++}htmlDiario+='<tr><td class="p-1 border">'+fechaStr+'</td><td class="p-1 border">'+tracto+'</td><td class="p-1 border">'+gar+'</td><td class="p-1 border">'+sal+'</td><td class="p-1 border font-bold">'+tatText+'</td></tr>'});document.getElementById('tbodyTatDiario').innerHTML=htmlDiario||'<tr><td colspan=5>Sin datos</td></tr>';var prom=c?Math.round(tot/c):0;document.getElementById('promDiario').innerHTML='Promedio: '+String(Math.floor(prom/60)).padStart(2,'0')+':'+String(prom%60).padStart(2,'0')+':00 | Meta: 01:10:00 '+(prom<=70?'✅ CUMPLE':'❌ NO CUMPLE');if(ch1)ch1.destroy();ch1=new Chart(document.getElementById('chartTatDiario'),{type:'line',data:{labels:datos.map(function(x){return x.placa}),datasets:[{label:'TAT (min)',data:datos.map(function(x){return x.min}),borderColor:'#0a3a8a'},{label:'META 70',data:datos.map(function(){return 70}),borderColor:'red',borderDash:[5,5]}]},options:{responsive:true}});var hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');var htmlHist='';hist.forEach(function(x){htmlHist+='<tr><td class="p-1 border">'+x.fecha+'</td><td class="p-1 border font-bold">'+x.promTAT+'</td></tr>'});document.getElementById('tbodyPromSemanal').innerHTML=htmlHist||'<tr><td colspan=2>Sin días guardados</td></tr>';if(ch2)ch2.destroy();ch2=new Chart(document.getElementById('chartPromSemanal'),{type:'line',data:{labels:hist.map(function(x){return x.fecha}),datasets:[{label:'TAT',data:hist.map(function(x){return x.min}),borderColor:'#0a3a8a'},{label:'META 70',data:hist.map(function(){return 70}),borderColor:'red',borderDash:[5,5]}]},options:{responsive:true}});}catch(e){console.log(e)}}
+function guardarDia(){var filas=document.querySelectorAll('#tbodyPrincipal tr');var tot=0;var c=0;filas.forEach(function(f){var td=f.querySelectorAll('td');if(td.length<17)return;var tat=td[17].innerText;if(tat.indexOf(':')>-1){var p=tat.split(':');tot+=parseInt(p[0])*60+parseInt(p[1]);c++}});var pm=c?Math.round(tot/c):0;var hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');hist.push({fecha:fechaStr,promTAT:String(Math.floor(pm/60)).padStart(2,'0')+':'+String(pm%60).padStart(2,'0')+':00',min:pm});localStorage.setItem('historicoTAT',JSON.stringify(hist));alert('✅ Día '+fechaStr+' guardado');cargarGraficos();}
 
 function exportarExcel(){
   try{
-    var total=document.getElementById('tbodyPrincipal').rows.length;var hora=new Date().toLocaleTimeString('es-PE');
+    var total=document.getElementById('tbodyPrincipal').rows.length;
+    var hora=new Date().toLocaleTimeString('es-PE');
     var headers=["P","TRANSPORTE","PLACA","PL. TRACTO","PL. CARRETA","N° PALLETS","TIPO DE PRODUCTO","PROCEDENCIA","TIPO","REPORTE EN GARITA","INICIO DESCARGA","FIN DESCARGA","FIN VERIF GR","SALIDA CD","INGRESO GR/SAP","ESTATUS","TAT"];
     var data=[["STATUS CD LIMA SUR - REPORTE DE OPERACIONES"],["Fecha: "+fechaStr+" | Total Unidades: "+total+" | Generado: "+hora],[],headers];
-    document.querySelectorAll('#tbodyPrincipal tr').forEach(function(tr,i){var c=tr.querySelectorAll('td');if(c.length<17)return;data.push([i+1,c[1].innerText.trim(),c[2].innerText.trim(),c[3].innerText.trim(),c[4].innerText.trim(),c[5].innerText.trim(),c[6].innerText.trim(),c[7].innerText.trim(),c[8].innerText.trim(),c[9].innerText.trim(),c[10].innerText.trim(),c[11].innerText.trim(),c[12].innerText.trim(),c[13].innerText.trim(),c[14].innerText.trim(),c[15].innerText.trim(),c[16].innerText.trim()])});
-    data.push([]);data.push(["TOTAL","","","","","","","","","","","","","","",total,""]);
+    document.querySelectorAll('#tbodyPrincipal tr').forEach(function(tr,i){
+      var c=tr.querySelectorAll('td');
+      if(c.length<18) return;
+      data.push([i+1,c[1].innerText.trim(),c[2].innerText.trim(),c[3].innerText.trim(),c[4].innerText.trim(),c[5].innerText.trim(),c[6].innerText.trim(),c[7].innerText.trim(),c[8].innerText.trim(),c[9].innerText.trim(),c[10].innerText.trim(),c[11].innerText.trim(),c[12].innerText.trim(),c[13].innerText.trim(),c[14].innerText.trim(),c[15].innerText.trim(),c[17].innerText.trim()]);
+    });
+    data.push([]);
+    data.push(["TOTAL","","","","","","","","","","","","","","",total,""]);
     var ws=XLSX.utils.aoa_to_sheet(data);
     ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:16}},{s:{r:1,c:0},e:{r:1,c:16}},{s:{r:data.length-1,c:0},e:{r:data.length-1,c:15}}];
     ws['!cols']=[{wch:6},{wch:14},{wch:18},{wch:12},{wch:12},{wch:10},{wch:18},{wch:14},{wch:12},{wch:16},{wch:16},{wch:14},{wch:14},{wch:12},{wch:16},{wch:14},{wch:10}];
     var border={top:{style:"thin"},bottom:{style:"thin"},left:{style:"thin"},right:{style:"thin"}};
     for(var R=0;R<data.length;R++){for(var C=0;C<17;C++){var addr=XLSX.utils.encode_cell({r:R,c:C});var cell=ws[addr];if(!cell)continue;if(!cell.s)cell.s={};cell.s.border=border;cell.s.alignment={horizontal:"center",vertical:"center",wrapText:true};if(R==0){cell.s.fill={fgColor:{rgb:"0A3A8A"}};cell.s.font={color:{rgb:"FFFFFF"},bold:true,sz:14}}else if(R==1){cell.s.fill={fgColor:{rgb:"D9E2F3"}};cell.s.font={bold:true,sz:11}}else if(R==3){cell.s.fill={fgColor:{rgb:"FACC15"}};cell.s.font={bold:true,sz:11}}else if(R==data.length-1){cell.s.fill={fgColor:{rgb:"0A3A8A"}};cell.s.font={bold:true,color:{rgb:"FFFFFF"},sz:12}}}}
-    var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Status CD");XLSX.writeFile(wb,"STATUS_CD_LIMA_SUR_"+fechaStr.replaceAll('/','-')+".xlsx");
+    var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Status CD LIMA SUR");XLSX.writeFile(wb,"STATUS_CD_LIMA_SUR_"+fechaStr.replaceAll('/','-')+".xlsx");
   }catch(e){alert('Error Excel: '+e.message)}
 }
 
