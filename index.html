@@ -17,37 +17,7 @@
 
 <div id="modalAgregar" class="fixed inset-0 modal-bg hidden z-50 flex items-center justify-center p-4"><div class="bg-white rounded-xl max-w-3xl w-full p-5 max-h-[90vh] overflow-y-auto"><div class="flex justify-between mb-4"><h3 id="tituloModal" class="font-black">+ AGREGAR UNIDAD</h3><button id="btnCerrarModal" type="button" class="bg-black text-white px-3 rounded">X</button></div><div class="grid grid-cols-2 gap-3 text-[12px]"><label>TRANSPORTE<input id="fTransporte" class="border p-2 rounded w-full"></label><label>N° PALLETS<input id="fPallets" type="number" class="border p-2 rounded w-full"></label><label class="font-bold">PL. TRACTO<input id="fTracto" class="border-2 border-blue-400 p-2 rounded w-full bg-yellow-50"></label><label class="font-bold">PL. CARRETA<input id="fCarreta" class="border-2 border-blue-400 p-2 rounded w-full bg-yellow-50"></label><label>TIPO PRODUCTO<input id="fTipoProd" value="ABARROTES" class="border p-2 rounded w-full"></label><label>PROCEDENCIA<input id="fProc" value="HUACHIPA" class="border p-2 rounded w-full"></label><label>REPORTE GARITA<input id="fGarita" type="time" class="border p-2 rounded w-full bg-orange-100"></label><label>SALIDA CD<input id="fSalida" type="time" class="border p-2 rounded w-full"></label><label>INICIO DESCARGA<input id="fInicio" type="time" class="border p-2 rounded w-full"></label><label>FIN DESCARGA<input id="fFin" type="time" class="border p-2 rounded w-full"></label><label>FIN VERIF<input id="fVerif" type="time" class="border p-2 rounded w-full"></label><label>INGRESO SAP<input id="fIngreso" type="time" class="border p-2 rounded w-full"></label><label>TIPO<select id="fTipo" class="border p-2 rounded w-full"><option>Recepción</option></select></label><label>STATUS<select id="fStatus" class="border p-2 rounded w-full"><option>ATENDIDO</option><option>PENDIENTE</option><option>EN PROCESO</option></select></label></div><button id="btnGuardarModal" type="button" class="mt-5 bg-blue-700 text-white w-full py-3 rounded-xl font-black">GUARDAR</button></div></div>
 
-<!-- ADMIN CON LAS 2 CARPETAS RESTAURADAS -->
-<div id="modalAdmin" class="fixed inset-0 modal-bg hidden z-50 p-3 overflow-y-auto">
-  <div class="bg-white rounded-xl max-w-7xl mx-auto p-4">
-    <div class="flex justify-between items-center mb-4"><h2 class="font-black text-lg">ADMIN DASHBOARD - Solo Administrador</h2><button id="btnCerrarAdmin" type="button" class="bg-black text-white px-4 py-1 rounded">X Cerrar</button></div>
-    
-    <!-- CARPETA 1 - TAT DIARIO -->
-    <div class="border-2 border-red-600 rounded-lg p-2 mb-4">
-      <div class="bg-[#0a3a8a] text-white text-center font-bold py-2 mb-2 text-[12px]">TAT RECEPCIONES T1 DIARIO - META 01:10:00 | Fecha actual: <span id="fechaHoy">26/10/2026</span></div>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="md:col-span-1 overflow-x-auto max-h-[300px] overflow-y-auto">
-          <table class="w-full text-[11px] border"><thead class="bg-gray-100 sticky top-0"><tr><th class="p-1 border">FECHA</th><th class="p-1 border">PL. TRACTO</th><th class="p-1 border">H. REPORTE EN GARITA</th><th class="p-1 border">H. SALIDA CD</th><th class="p-1 border">Promedio de TAT.</th></tr></thead><tbody id="tbodyTatDiario" class="text-[10px]"></tbody></table>
-          <div id="promDiario" class="mt-2 text-[12px] font-bold bg-yellow-100 p-2 rounded"></div>
-        </div>
-        <div class="md:col-span-2"><canvas id="chartTatDiario" height="200"></canvas></div>
-      </div>
-    </div>
-
-    <!-- CARPETA 2 - PROM SEMANAL - ESTA ERA LA QUE TE FALTABA -->
-    <div class="border-2 border-gray-800 rounded-lg p-2">
-      <div class="bg-[#0a3a8a] text-white text-center font-bold py-2 mb-2 text-[12px]">PROM CICLO TOTAL RECEPCIONES T1 SEMANAL - OCTUBRE 2025 | Histórico Guardado</div>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="md:col-span-1 overflow-x-auto max-h-[300px] overflow-y-auto">
-          <table class="w-full text-[11px] border"><thead class="bg-gray-100 sticky top-0"><tr><th class="p-1 border">FECHA</th><th class="p-1 border">Prom. INGRESO CD</th><th class="p-1 border">Prom. INICIO DESCARGA</th><th class="p-1 border">Prom. SALIDA CD</th><th class="p-1 border">Prom. TAT</th></tr></thead><tbody id="tbodyPromSemanal" class="text-[10px]"></tbody></table>
-        </div>
-        <div class="md:col-span-2"><canvas id="chartPromSemanal" height="200"></canvas></div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
+<div id="modalAdmin" class="fixed inset-0 modal-bg hidden z-50 p-3 overflow-y-auto"><div class="bg-white rounded-xl max-w-7xl mx-auto p-4"><div class="flex justify-between items-center mb-4"><h2 class="font-black text-lg">ADMIN DASHBOARD - Solo Administrador</h2><button id="btnCerrarAdmin" type="button" class="bg-black text-white px-4 py-1 rounded">X Cerrar</button></div><div class="border-2 border-red-600 rounded-lg p-2 mb-4"><div class="bg-[#0a3a8a] text-white text-center font-bold py-2 mb-2 text-[12px]">TAT RECEPCIONES T1 DIARIO - META 01:10:00 | Fecha actual: <span id="fechaHoy">26/10/2026</span></div><div class="grid md:grid-cols-3 gap-4"><div class="md:col-span-1 overflow-x-auto max-h-[300px] overflow-y-auto"><table class="w-full text-[11px] border"><thead class="bg-gray-100 sticky top-0"><tr><th class="p-1 border">FECHA</th><th class="p-1 border">PL. TRACTO</th><th class="p-1 border">H. REPORTE EN GARITA</th><th class="p-1 border">H. SALIDA CD</th><th class="p-1 border">Promedio de TAT.</th></tr></thead><tbody id="tbodyTatDiario" class="text-[10px]"></tbody></table><div id="promDiario" class="mt-2 text-[12px] font-bold bg-yellow-100 p-2 rounded"></div></div><div class="md:col-span-2"><canvas id="chartTatDiario" height="200"></canvas></div></div></div><div class="border-2 border-gray-800 rounded-lg p-2"><div class="bg-[#0a3a8a] text-white text-center font-bold py-2 mb-2 text-[12px]">PROM CICLO TOTAL RECEPCIONES T1 SEMANAL - OCTUBRE 2025 | Histórico Guardado</div><div class="grid md:grid-cols-3 gap-4"><div class="md:col-span-1 overflow-x-auto max-h-[300px] overflow-y-auto"><table class="w-full text-[11px] border"><thead class="bg-gray-100 sticky top-0"><tr><th class="p-1 border">FECHA</th><th class="p-1 border">Prom. INGRESO CD</th><th class="p-1 border">Prom. INICIO DESCARGA</th><th class="p-1 border">Prom. SALIDA CD</th><th class="p-1 border">Prom. TAT</th></tr></thead><tbody id="tbodyPromSemanal" class="text-[10px]"></tbody></table></div><div class="md:col-span-2"><canvas id="chartPromSemanal" height="200"></canvas></div></div></div></div></div>
 <div id="modalPass" class="fixed inset-0 modal-bg hidden z-[60] flex items-center justify-center"><div class="bg-white p-6 rounded-xl w-80"><h3 class="font-bold mb-2">🔒 Acceso Administrador</h3><input type="password" id="inputPass" placeholder="Contraseña" class="border w-full p-2 rounded mb-3"><button id="btnEntrarPass" type="button" class="bg-blue-700 text-white w-full py-2 rounded font-bold">Entrar</button><p class="text-[10px] text-gray-400 mt-2">Clave: Lavoro2026</p></div></div>
 
 <script>
@@ -55,16 +25,11 @@ document.addEventListener('DOMContentLoaded', function(){
   const hoy=new Date();const fechaStr=hoy.toLocaleDateString('es-PE');
   const elFechaHoy=document.getElementById('fechaHoy'); if(elFechaHoy) elFechaHoy.innerText=fechaStr;
   const elHeader=document.getElementById('fechaHeader'); if(elHeader) elHeader.innerText=hoy.toLocaleDateString('es-PE',{dateStyle:'full'})+' | '+hoy.toLocaleTimeString('es-PE');
-
-  let filaEditando=null;
-  let ch1=null,ch2=null;
-
+  let filaEditando=null;let ch1=null,ch2=null;
   window.editarFila=function(btn){const tr=btn.closest('tr');filaEditando=tr;const c=tr.querySelectorAll('td');document.getElementById('fTransporte').value=c[1].innerText;document.getElementById('fTracto').value=c[3].innerText;document.getElementById('fCarreta').value=c[4].innerText;document.getElementById('fPallets').value=c[5].innerText;document.getElementById('fTipoProd').value=c[6].innerText;document.getElementById('fProc').value=c[7].innerText;document.getElementById('fTipo').value=c[8].innerText;document.getElementById('fGarita').value=c[9].innerText;document.getElementById('fInicio').value=c[10].innerText;document.getElementById('fFin').value=c[11].innerText;document.getElementById('fVerif').value=c[12].innerText;document.getElementById('fSalida').value=c[13].innerText;document.getElementById('fIngreso').value=c[14].innerText;document.getElementById('fStatus').value=c[15].innerText;document.getElementById('tituloModal').innerText='✏️ EDITAR UNIDAD';document.getElementById('modalAgregar').classList.remove('hidden')}
-  window.eliminarFila=function(btn){if(confirm('¿Eliminar?')){btn.closest('tr').remove();document.getElementById('cTotal').innerText=document.getElementById('tbodyPrincipal').rows.length}}
-
+  window.eliminarFila=function(btn){if(confirm('¿Eliminar esta unidad?')){btn.closest('tr').remove();document.getElementById('cTotal').innerText=document.getElementById('tbodyPrincipal').rows.length}}
   function abrirModalAgregar(){filaEditando=null;document.getElementById('tituloModal').innerText='+ AGREGAR UNIDAD';document.getElementById('modalAgregar').classList.remove('hidden')}
   function cerrarModalAgregar(){document.getElementById('modalAgregar').classList.add('hidden');filaEditando=null}
-
   function guardarNuevaUnidad(){
     const trp=document.getElementById('fTransporte').value||'S/N';const tracto=document.getElementById('fTracto').value.toUpperCase().trim();const carreta=document.getElementById('fCarreta').value.toUpperCase().trim();if(!tracto){alert('Digita PL. TRACTO');return}
     const placa=carreta?tracto+'/'+carreta:tracto;const pallets=document.getElementById('fPallets').value||'0';const tipoProd=document.getElementById('fTipoProd').value;const proc=document.getElementById('fProc').value;const tipo=document.getElementById('fTipo').value;const garita=document.getElementById('fGarita').value||'';const inicio=document.getElementById('fInicio').value||'';const fin=document.getElementById('fFin').value||'';const verif=document.getElementById('fVerif').value||'';const salida=document.getElementById('fSalida').value||'';const ingreso=document.getElementById('fIngreso').value||'';const status=document.getElementById('fStatus').value;
@@ -72,35 +37,9 @@ document.addEventListener('DOMContentLoaded', function(){
     if(filaEditando){const c=filaEditando.querySelectorAll('td');c[1].innerText=trp;c[2].innerText=placa;c[3].innerText=tracto;c[4].innerText=carreta;c[5].innerText=pallets;c[6].innerText=tipoProd;c[7].innerText=proc;c[8].innerText=tipo;c[9].innerText=garita;c[10].innerText=inicio;c[11].innerText=fin;c[12].innerText=verif;c[13].innerText=salida;c[14].innerText=ingreso;c[15].innerText=status;c[17].innerText=tat}else{const tbody=document.getElementById('tbodyPrincipal');const tr=document.createElement('tr');tr.innerHTML=`<td class="td">${tbody.rows.length+1}</td><td class="td">${trp}</td><td class="td font-bold">${placa}</td><td class="td">${tracto}</td><td class="td">${carreta}</td><td class="td">${pallets}</td><td class="td">${tipoProd}</td><td class="td">${proc}</td><td class="td">${tipo}</td><td class="td">${garita}</td><td class="td">${inicio}</td><td class="td">${fin}</td><td class="td">${verif}</td><td class="td font-bold">${salida}</td><td class="td">${ingreso}</td><td class="td">${status}</td><td class="td"><button onclick="editarFila(this)" class="bg-orange-200 text-[9px] px-2 py-1 rounded mr-1">Editar</button><button onclick="eliminarFila(this)" class="bg-red-600 text-white text-[9px] px-2 py-1 rounded">Eliminar</button></td><td class="td">${tat}</td>`;tbody.appendChild(tr)}
     cerrarModalAgregar();document.getElementById('cTotal').innerText=document.getElementById('tbodyPrincipal').rows.length;
   }
-
-  function calcularTAT(){
-    const filas=document.querySelectorAll('#tbodyPrincipal tr');let htmlDiario='';let datos=[];let tot=0;let c=0;
-    filas.forEach(f=>{const td=f.querySelectorAll('td');if(td.length<17)return;const tracto=td[3].innerText;const gar=td[9].innerText;const sal=td[13].innerText;const tatText=td[17].innerText;let min=0;if(tatText.includes(':')){const p=tatText.split(':');min=parseInt(p[0])*60+parseInt(p[1])}if(min>0){datos.push({placa:tracto,min});tot+=min;c++}htmlDiario+=`<tr><td class="p-1 border">${fechaStr}</td><td class="p-1 border">${tracto}</td><td class="p-1 border">${gar}</td><td class="p-1 border">${sal}</td><td class="p-1 border font-bold">${tatText}</td></tr>`});
-    document.getElementById('tbodyTatDiario').innerHTML=htmlDiario||'<tr><td colspan=5 class="text-center">Sin datos</td></tr>';
-    const prom=c?Math.round(tot/c):0;const h=Math.floor(prom/60);const m=prom%60;
-    document.getElementById('promDiario').innerHTML=`Promedio del día: ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:00 • Meta: 01:10:00 ${prom<=70?'✅ Cumple':'❌ No Cumple'}`;
-    return datos;
-  }
-
-  function cargarGraficos(){
-    const datos=calcularTAT();
-    if(ch1)ch1.destroy();
-    ch1=new Chart(document.getElementById('chartTatDiario'),{type:'line',data:{labels:datos.map(x=>x.placa),datasets:[{label:'TAT (min) vs META 70min',data:datos.map(x=>x.min),borderColor:'red',backgroundColor:'rgba(255,0,0,0.2)',tension:0.3},{label:'META 01:10',data:datos.map(()=>70),borderColor:'green',borderDash:[5,5]}]},options:{responsive:true,plugins:{title:{display:true,text:'TAT DIARIO - PLACAS VS TIEMPOS - HOY '+fechaStr}}}});
-    
-    const hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');
-    let htmlHist='';hist.forEach(x=>{htmlHist+=`<tr><td class="p-1 border">${x.fecha}</td><td class="p-1 border">${x.promIngreso||'00:30'}</td><td class="p-1 border">${x.promInicio||'00:45'}</td><td class="p-1 border">${x.promSalida||'01:00'}</td><td class="p-1 border font-bold">${x.promTAT}</td></tr>`});
-    document.getElementById('tbodyPromSemanal').innerHTML=htmlHist||'<tr><td colspan=5 class="text-center text-gray-400">Aún no hay días guardados</td></tr>';
-    if(ch2)ch2.destroy();
-    ch2=new Chart(document.getElementById('chartPromSemanal'),{type:'line',data:{labels:hist.map(x=>x.fecha),datasets:[{label:'Prom. TAT',data:hist.map(x=>x.min),borderColor:'blue',backgroundColor:'rgba(0,0,255,0.2)',tension:0.3},{label:'META 01:10',data:hist.map(()=>70),borderColor:'green',borderDash:[5,5]}]},options:{responsive:true,plugins:{title:{display:true,text:'PROM CICLO TOTAL SEMANAL'}}}});
-  }
-
-  function guardarDia(){
-    const datos=calcularTAT();const pm=datos.length?Math.round(datos.reduce((a,b)=>a+b.min,0)/datos.length):0;
-    const hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');
-    hist.push({fecha:fechaStr,promTAT:`${String(Math.floor(pm/60)).padStart(2,'0')}:${String(pm%60).padStart(2,'0')}:00`,min:pm,promIngreso:'00:30:00',promInicio:'00:45:00',promSalida:'01:00:00'});
-    localStorage.setItem('historicoTAT',JSON.stringify(hist));alert('✅ Día '+fechaStr+' guardado');cargarGraficos();
-  }
-
+  function calcularTAT(){const filas=document.querySelectorAll('#tbodyPrincipal tr');let htmlDiario='';let datos=[];let tot=0;let c=0;filas.forEach(f=>{const td=f.querySelectorAll('td');if(td.length<17)return;const tracto=td[3].innerText;const gar=td[9].innerText;const sal=td[13].innerText;const tatText=td[17].innerText;let min=0;if(tatText.includes(':')){const p=tatText.split(':');min=parseInt(p[0])*60+parseInt(p[1])}if(min>0){datos.push({placa:tracto,min});tot+=min;c++}htmlDiario+=`<tr><td class="p-1 border">${fechaStr}</td><td class="p-1 border">${tracto}</td><td class="p-1 border">${gar}</td><td class="p-1 border">${sal}</td><td class="p-1 border font-bold">${tatText}</td></tr>`});document.getElementById('tbodyTatDiario').innerHTML=htmlDiario||'<tr><td colspan=5 class="text-center">Sin datos</td></tr>';const prom=c?Math.round(tot/c):0;const h=Math.floor(prom/60);const m=prom%60;document.getElementById('promDiario').innerHTML=`Promedio del día: ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:00 • Meta: 01:10:00 ${prom<=70?'✅ Cumple':'❌ No Cumple'}`;return datos;}
+  function cargarGraficos(){const datos=calcularTAT();if(ch1)ch1.destroy();ch1=new Chart(document.getElementById('chartTatDiario'),{type:'line',data:{labels:datos.map(x=>x.placa),[STRIPPED] (min) vs META 70min',data:datos.map(x=>x.min),[STRIPPED] 01:10',data:datos.map(()=>70),[STRIPPED] DIARIO - PLACAS VS TIEMPOS - HOY '+fechaStr}}}});const hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');let htmlHist='';hist.forEach(x=>{htmlHist+=`<tr><td class="p-1 border">${x.fecha}</td><td class="p-1 border">${x.promIngreso||'00:30'}</td><td class="p-1 border">${x.promInicio||'00:45'}</td><td class="p-1 border">${x.promSalida||'01:00'}</td><td class="p-1 border font-bold">${x.promTAT}</td></tr>`});document.getElementById('tbodyPromSemanal').innerHTML=htmlHist||'<tr><td colspan=5 class="text-center text-gray-400">Aún no hay días guardados</td></tr>';if(ch2)ch2.destroy();ch2=new Chart(document.getElementById('chartPromSemanal'),{type:'line',data:{labels:hist.map(x=>x.fecha),[STRIPPED] TAT',data:hist.map(x=>x.min),[STRIPPED] 01:10',data:hist.map(()=>70),[STRIPPED] CICLO TOTAL SEMANAL'}}}});}
+  function guardarDia(){const datos=calcularTAT();const pm=datos.length?Math.round(datos.reduce((a,b)=>a+b.min,0)/datos.length):0;const hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');hist.push({fecha:fechaStr,promTAT:`${String(Math.floor(pm/60)).padStart(2,'0')}:${String(pm%60).padStart(2,'0')}:00`,min:pm,promIngreso:'00:30:00',promInicio:'00:45:00',promSalida:'01:00:00'});localStorage.setItem('historicoTAT',JSON.stringify(hist));alert('✅ Día '+fechaStr+' guardado');cargarGraficos();}
   function exportarExcel(){
     try{
       const total=document.getElementById('tbodyPrincipal').rows.length;const hora=new Date().toLocaleTimeString('es-PE');
@@ -117,27 +56,27 @@ document.addEventListener('DOMContentLoaded', function(){
     }catch(e){alert('Error export: '+e.message)}
   }
 
-  // BOTONES QUE YA DAN CLICK
+  // BOTON LIMPIAR ARREGLADO - PIDE CONFIRMAR Y BORRA TODO ABAJO
+  document.getElementById('btnLimpiar').onclick=function(){
+    if(confirm('¿Estás seguro que deseas LIMPIAR todo lo llenado abajo?\n\nSe borrarán todas las unidades del PANEL DE CONTROL.\nEsta acción no se puede deshacer.\n\nPresiona ACEPTAR para borrar o CANCELAR para no borrar.')){
+      document.getElementById('tbodyPrincipal').innerHTML='';
+      document.getElementById('buscador').value='';
+      document.getElementById('cTotal').innerText='0';
+      document.getElementById('cRecep').innerText='0';
+      document.getElementById('cAtend').innerText='0';
+    }
+  };
+
   document.getElementById('btnAgregar').onclick=abrirModalAgregar;
   document.getElementById('btnExcel').onclick=exportarExcel;
-  document.getElementById('btnLimpiar').onclick=function(){document.getElementById('buscador').value='';document.querySelectorAll('#tbodyPrincipal tr').forEach(tr=>tr.style.display='')};
   document.getElementById('btnGuardarModal').onclick=guardarNuevaUnidad;
   document.getElementById('btnCerrarModal').onclick=cerrarModalAgregar;
   document.getElementById('btnAdminTop').onclick=function(){document.getElementById('modalPass').classList.remove('hidden')};
   document.getElementById('btnGuardarTop').onclick=guardarDia;
   document.getElementById('btnCerrarAdmin').onclick=function(){document.getElementById('modalAdmin').classList.add('hidden')};
-  document.getElementById('btnEntrarPass').onclick=function(){
-    if(document.getElementById('inputPass').value==='Lavoro2026'){
-      document.getElementById('modalPass').classList.add('hidden');
-      document.getElementById('modalAdmin').classList.remove('hidden');
-      setTimeout(cargarGraficos,100);
-    }else alert('Clave incorrecta')
-  };
+  document.getElementById('btnEntrarPass').onclick=function(){if(document.getElementById('inputPass').value==='Lavoro2026'){document.getElementById('modalPass').classList.add('hidden');document.getElementById('modalAdmin').classList.remove('hidden');setTimeout(cargarGraficos,100);}else alert('Clave incorrecta')};
   document.getElementById('buscador').addEventListener('input',function(e){const q=e.target.value.toLowerCase();document.querySelectorAll('#tbodyPrincipal tr').forEach(tr=>{tr.style.display=tr.innerText.toLowerCase().includes(q)?'':'none'})});
-  
-  window.cargarGraficos=cargarGraficos;
-  window.guardarDia=guardarDia;
-  window.exportarExcel=exportarExcel;
+  window.cargarGraficos=cargarGraficos;window.guardarDia=guardarDia;window.exportarExcel=exportarExcel;
 });
 </script>
 </body>
