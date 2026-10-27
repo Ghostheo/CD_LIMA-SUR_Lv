@@ -87,9 +87,9 @@ button{cursor:pointer}
 <button type="button" onclick="borrarData()" class="bg-red-600 text-white px-3 py-2 text-[10px] font-bold border border-black ml-auto">BORRAR TODO DATA</button>
 <button type="button" onclick="exportarDataExcel()" class="bg-green-700 text-white px-3 py-2 text-[10px] font-bold border border-black">EXPORTAR DATA</button>
 </div>
-<div id="ventanaData" class="border-2 border-black bg-white"><div class="bg-black text-white text-center font-bold py-1 text-[11px]">1. DATA MADRE - Con Filtro y Enmarcado</div><div class="overflow-auto max-h-[600px]"><table class="w-full text-[10px]"><thead><tr><th class="th-black">FECHA</th><th class="th-black">TRANSPORTE</th><th class="th-black">PLACA</th><th class="th-black">TRACTO</th><th class="th-black">CARRETA</th><th class="th-black">TIPO</th><th class="th-black">PALLETS</th><th class="th-black">GARITA</th><th class="th-black">INICIO</th><th class="th-black">SALIDA</th><th class="th-black">TAT</th></tr></thead><tbody id="tbodyData"></tbody></table></div><div class="bg-yellow-100 border border-black p-2 text-[11px] font-bold" id="totalDataInfo">Total DATA: 0</div></div>
+<div id="ventanaData" class="border-2 border-black bg-white"><div class="bg-black text-white text-center font-bold py-1 text-[11px]">1. DATA MADRE</div><div class="overflow-auto max-h-[600px]"><table class="w-full text-[10px]"><thead><tr><th class="th-black">FECHA</th><th class="th-black">TRANSPORTE</th><th class="th-black">PLACA</th><th class="th-black">TRACTO</th><th class="th-black">CARRETA</th><th class="th-black">TIPO</th><th class="th-black">PALLETS</th><th class="th-black">GARITA</th><th class="th-black">INICIO</th><th class="th-black">SALIDA</th><th class="th-black">TAT</th></tr></thead><tbody id="tbodyData"></tbody></table></div><div class="bg-yellow-100 border border-black p-2 text-[11px] font-bold" id="totalDataInfo">Total DATA: 0</div></div>
 <div id="ventanaTatDiario" class="hidden border-2 border-black bg-white"><div class="flex justify-between bg-[#8ea9db] border border-black p-2"><div class="font-bold text-[12px] text-center w-full">2. TAT DIARIO - Jala de DATA - <span id="fechaHoy"></span></div><div class="bg-yellow-200 border border-black text-[10px] px-2 py-1 font-bold">META 01:10:00</div></div><div class="overflow-auto max-h-[300px] border border-black mb-3"><table class="w-full text-[10px]"><thead><tr><th class="th-blue">FECHA</th><th class="th-blue">TRACTO</th><th class="th-blue">TIPO</th><th class="th-blue">H. GARITA</th><th class="th-blue">H. INICIO</th><th class="th-blue">H. SALIDA</th><th class="th-blue">TAT</th></tr></thead><tbody id="tbodyTatDiarioResumen"></tbody></table></div><div class="border-2 border-black p-2 bg-white"><div class="grid md:grid-cols-3 gap-4"><div class="md:col-span-1 overflow-auto max-h-[350px] border-2 border-black"><table class="w-full text-[10px]"><thead><tr><th class="p-1 border border-black">FECHA</th><th class="p-1 border border-black">TRACTO</th><th class="p-1 border border-black">INGRESO</th><th class="p-1 border border-black">INICIO</th><th class="p-1 border border-black">SALIDA</th><th class="p-1 border border-black">TAT</th></tr></thead><tbody id="tbodyTatDiario"></tbody><tfoot class="bg-gray-200 font-bold"><tr><td class="p-1 border border-black">Total</td><td class="p-1 border border-black"></td><td class="p-1 border border-black" id="detTotalIngreso"></td><td class="p-1 border border-black" id="detTotalInicio"></td><td class="p-1 border border-black" id="detTotalSalida"></td><td class="p-1 border border-black" id="detTotalTat"></td></tr></tfoot></table><div id="promDiario" class="mt-2 text-[11px] font-bold bg-yellow-100 p-2 rounded border border-black"></div></div><div class="md:col-span-2 border-2 border-black p-2 bg-white"><canvas id="chartTatDiario"></canvas></div></div></div></div>
-<div id="ventanaPromCiclo" class="hidden border-2 border-black bg-white"><div class="bg-[#0a3a8a] text-white text-center font-bold py-2 text-[12px] border border-black">3. PROM TAT CICLO - Hora real 09:40 corregida - Jala de DATA</div><div class="grid md:grid-cols-3 gap-4 p-2"><div class="md:col-span-1 overflow-auto max-h-[400px] border-2 border-black"><table class="w-full text-[10px]"><thead><tr><th class="p-1 border border-black bg-gray-100">FECHA</th><th class="p-1 border border-black bg-gray-100">Prom. INGRESO</th><th class="p-1 border border-black bg-gray-100">Prom. INICIO</th><th class="p-1 border border-black bg-gray-100">Prom. SALIDA</th><th class="p-1 border border-black bg-gray-100">Prom. TAT</th></tr></thead><tbody id="tbodyPromSemanal"></tbody><tfoot class="bg-gray-100 font-bold"><tr><td class="p-1 border border-black">Total</td><td class="p-1 border border-black" id="totalIngreso"></td><td class="p-1 border border-black" id="totalInicio"></td><td class="p-1 border border-black" id="totalSalida"></td><td class="p-1 border border-black" id="totalTAT"></td></tr></tfoot></table></div><div class="md:col-span-2 border-2 border-black p-2 bg-white"><canvas id="chartPromSemanal"></canvas></div></div></div>
+<div id="ventanaPromCiclo" class="hidden border-2 border-black bg-white"><div class="bg-[#0a3a8a] text-white text-center font-bold py-2 text-[12px] border border-black">3. PROM TAT CICLO - Hora real corregida</div><div class="grid md:grid-cols-3 gap-4 p-2"><div class="md:col-span-1 overflow-auto max-h-[400px] border-2 border-black"><table class="w-full text-[10px]"><thead><tr><th class="p-1 border border-black bg-gray-100">FECHA</th><th class="p-1 border border-black bg-gray-100">Prom. INGRESO</th><th class="p-1 border border-black bg-gray-100">Prom. INICIO</th><th class="p-1 border border-black bg-gray-100">Prom. SALIDA</th><th class="p-1 border border-black bg-gray-100">Prom. TAT</th></tr></thead><tbody id="tbodyPromSemanal"></tbody><tfoot class="bg-gray-100 font-bold"><tr><td class="p-1 border border-black">Total</td><td class="p-1 border border-black" id="totalIngreso"></td><td class="p-1 border border-black" id="totalInicio"></td><td class="p-1 border border-black" id="totalSalida"></td><td class="p-1 border border-black" id="totalTAT"></td></tr></tfoot></table></div><div class="md:col-span-2 border-2 border-black p-2 bg-white"><canvas id="chartPromSemanal"></canvas></div></div></div>
 </div></div>
 
 <div id="modalPass" class="fixed inset-0 modal-bg hidden z-[60] flex items-center justify-center"><div class="bg-white p-6 rounded-xl w-80 border-2 border-black"><h3 class="font-bold mb-2">🔒 Acceso Administrador</h3><input type="password" id="inputPass" placeholder="Contraseña" class="border border-black w-full p-2 rounded mb-3"><button type="button" onclick="entrarAdmin()" class="bg-blue-700 text-white w-full py-2 rounded font-bold border border-black">Entrar</button></div></div>
@@ -114,102 +114,120 @@ window.eliminarFila=function(btn){if(confirm('¿Eliminar?')){btn.closest('tr').r
 window.actualizarContadores=function(){var t=document.getElementById('tbodyPrincipal').rows.length;document.getElementById('cTotal').innerText=t;document.getElementById('cRecep').innerText=t;document.getElementById('cAtend').innerText=t; var dataTotal=JSON.parse(localStorage.getItem('DATA_MADRE')||'[]'); document.getElementById('cDataTotal').innerText=dataTotal.length;}
 window.limpiarTodo=function(){if(confirm('¿Limpiar todo?')){document.getElementById('tbodyPrincipal').innerHTML='';actualizarContadores();}}
 window.guardarNuevaUnidad=function(){var trp=document.getElementById('fTransporte').value||'S/N';var tracto=document.getElementById('fTracto').value.toUpperCase().trim();var carreta=document.getElementById('fCarreta').value.toUpperCase().trim();if(!tracto){alert('Digita PL. TRACTO');return}var placa=carreta?tracto+'/'+carreta:tracto;var pallets=document.getElementById('fPallets').value||'0';var tipoProd=document.getElementById('fTipoProd').value;var proc=document.getElementById('fProc').value;var tipo=document.getElementById('fTipo').value;var garita=document.getElementById('fGarita').value||'';var inicio=document.getElementById('fInicio').value||'';var fin=document.getElementById('fFin').value||'';var verif=document.getElementById('fVerif').value||'';var salida=document.getElementById('fSalida').value||'';var ingreso=document.getElementById('fIngreso').value||'';var status=document.getElementById('fStatus').value;var tat='--:--';if(garita&&salida){var m1=toMin(garita);var m2=toMin(salida); if(m1!=null&&m2!=null){var d=m2-m1; if(d<0) d+=1440; tat=Math.floor(d/60)+':'+String(d%60).padStart(2,'0')}}if(filaEditando){var c=filaEditando.querySelectorAll('td');c[1].innerText=trp;c[2].innerText=placa;c[3].innerText=tracto;c[4].innerText=carreta;c[5].innerText=pallets;c[6].innerText=tipoProd;c[7].innerText=proc;c[8].innerText=tipo;c[9].innerText=garita;c[10].innerText=inicio;c[11].innerText=fin;c[12].innerText=verif;c[13].innerText=salida;c[14].innerText=ingreso;c[15].innerText=status;c[17].innerText=tat}else{var tbody=document.getElementById('tbodyPrincipal');var tr=document.createElement('tr');tr.innerHTML='<td class="td">'+(tbody.rows.length+1)+'</td><td class="td">'+trp+'</td><td class="td font-bold">'+placa+'</td><td class="td">'+tracto+'</td><td class="td">'+carreta+'</td><td class="td">'+pallets+'</td><td class="td">'+tipoProd+'</td><td class="td">'+proc+'</td><td class="td">'+tipo+'</td><td class="td">'+garita+'</td><td class="td">'+inicio+'</td><td class="td">'+fin+'</td><td class="td">'+verif+'</td><td class="td font-bold">'+salida+'</td><td class="td">'+ingreso+'</td><td class="td">'+status+'</td><td class="td"><button type="button" onclick="editarFila(this)" class="bg-orange-400 text-white text-[9px] px-2 py-1 rounded mr-1 border border-black">Editar</button><button type="button" onclick="eliminarFila(this)" class="bg-red-600 text-white text-[9px] px-2 py-1 rounded border border-black">Eliminar</button></td><td class="td">'+tat+'</td>';tbody.appendChild(tr)}cerrarModalAgregar();actualizarContadores();}
-window.filtrarData=function(){var f=document.getElementById('fDataFecha')?document.getElementById('fDataFecha').value.toLowerCase():''; document.querySelectorAll('#tbodyData tr').forEach(function(tr){tr.style.display=tr.innerText.toLowerCase().includes(f)?'':'none'})}
 window.cargarGraficos=function(){
   try{
     var DATA=JSON.parse(localStorage.getItem('DATA_MADRE')||'[]');
     var htmlData=''; DATA.forEach(function(r){htmlData+='<tr><td class="td-small">'+r.fecha+'</td><td class="td-small">'+r.transporte+'</td><td class="td-small font-bold">'+r.placa+'</td><td class="td-small">'+r.tracto+'</td><td class="td-small">'+r.carreta+'</td><td class="td-small">'+r.tipoProd+'</td><td class="td-small">'+r.pallets+'</td><td class="td-small">'+r.garita+'</td><td class="td-small">'+r.inicio+'</td><td class="td-small">'+r.salida+'</td><td class="td-small font-bold">'+r.tat+'</td></tr>';});
-    document.getElementById('tbodyData').innerHTML=htmlData||'<tr><td colspan=11 class="text-center text-gray-400 p-2">No hay datos. Guarda un día</td></tr>';
+    document.getElementById('tbodyData').innerHTML=htmlData||'<tr><td colspan=11 class="text-center text-gray-400 p-2">No hay datos</td></tr>';
     document.getElementById('totalDataInfo').innerText='Total DATA: '+DATA.length;
     document.getElementById('cDataTotal').innerText=DATA.length;
     var htmlDiario=''; var htmlResumen=''; var datos=[]; var tot=0; var c=0; var sumGar=0,cGar=0,sumSal=0,cSal=0,sumIni=0,cIni=0;
-    var fuente = DATA.length>0 ? DATA : [];
     if(DATA.length>0){
-      fuente.forEach(function(r){htmlDiario+='<tr><td class="p-1 border border-black bg-white">'+r.fecha+'</td><td class="p-1 border border-black bg-white">'+r.tracto+'</td><td class="p-1 border border-black bg-white">'+r.garita+'</td><td class="p-1 border border-black bg-white">'+r.inicio+'</td><td class="p-1 border border-black bg-white">'+r.salida+'</td><td class="p-1 border border-black bg-white font-bold">'+r.tat+'</td></tr>';htmlResumen+='<tr><td class="p-1 border border-black bg-white">'+r.fecha+'</td><td class="p-1 border border-black bg-white">'+r.tracto+'</td><td class="p-1 border border-black bg-white">'+r.tipoProd+'</td><td class="p-1 border border-black bg-white">'+r.garita+'</td><td class="p-1 border border-black bg-white">'+r.inicio+'</td><td class="p-1 border border-black bg-white">'+r.salida+'</td><td class="p-1 border border-black bg-white font-bold">'+r.tat+'</td></tr>';var m=toMin(r.tat); if(m!=null){datos.push({placa:r.tracto,min:m}); tot+=m; c++} var mGar=toMin(r.garita); if(mGar!=null){sumGar+=mGar;cGar++} var mSal=toMin(r.salida); if(mSal!=null){sumSal+=mSal;cSal++} var mIni=toMin(r.inicio); if(mIni!=null){sumIni+=mIni;cIni++}});
+      DATA.forEach(function(r){htmlDiario+='<tr><td class="p-1 border border-black bg-white">'+r.fecha+'</td><td class="p-1 border border-black bg-white">'+r.tracto+'</td><td class="p-1 border border-black bg-white">'+r.garita+'</td><td class="p-1 border border-black bg-white">'+r.inicio+'</td><td class="p-1 border border-black bg-white">'+r.salida+'</td><td class="p-1 border border-black bg-white font-bold">'+r.tat+'</td></tr>';htmlResumen+='<tr><td class="p-1 border border-black bg-white">'+r.fecha+'</td><td class="p-1 border border-black bg-white">'+r.tracto+'</td><td class="p-1 border border-black bg-white">'+r.tipoProd+'</td><td class="p-1 border border-black bg-white">'+r.garita+'</td><td class="p-1 border border-black bg-white">'+r.inicio+'</td><td class="p-1 border border-black bg-white">'+r.salida+'</td><td class="p-1 border border-black bg-white font-bold">'+r.tat+'</td></tr>';var m=toMin(r.tat); if(m!=null){datos.push({placa:r.tracto,min:m}); tot+=m; c++} var mGar=toMin(r.garita); if(mGar!=null){sumGar+=mGar;cGar++} var mSal=toMin(r.salida); if(mSal!=null){sumSal+=mSal;cSal++} var mIni=toMin(r.inicio); if(mIni!=null){sumIni+=mIni;cIni++}});
     } else {
       document.querySelectorAll('#tbodyPrincipal tr').forEach(function(f){var td=f.querySelectorAll('td'); if(td.length<18) return; var tracto=td[3].innerText; var tipoProd=td[6].innerText; var gar=td[9].innerText; var ini=td[10].innerText; var sal=td[13].innerText; var tatText=td[17].innerText; var min=toMin(tatText); if(min!=null){datos.push({placa:tracto,min:min}); tot+=min; c++} htmlDiario+='<tr><td class="p-1 border border-black bg-white">'+fechaStr+'</td><td class="p-1 border border-black bg-white">'+tracto+'</td><td class="p-1 border border-black bg-white">'+gar+'</td><td class="p-1 border border-black bg-white">'+ini+'</td><td class="p-1 border border-black bg-white">'+sal+'</td><td class="p-1 border border-black bg-white font-bold">'+tatText+'</td></tr>';htmlResumen+='<tr><td class="p-1 border border-black bg-white">'+fechaStr+'</td><td class="p-1 border border-black bg-white">'+tracto+'</td><td class="p-1 border border-black bg-white">'+tipoProd+'</td><td class="p-1 border border-black bg-white">'+gar+'</td><td class="p-1 border border-black bg-white">'+ini+'</td><td class="p-1 border border-black bg-white">'+sal+'</td><td class="p-1 border border-black bg-white font-bold">'+tatText+'</td></tr>'; var mGar=toMin(gar); if(mGar!=null){sumGar+=mGar;cGar++} var mSal=toMin(sal); if(mSal!=null){sumSal+=mSal;cSal++} var mIni=toMin(ini); if(mIni!=null){sumIni+=mIni;cIni++}});
     }
     document.getElementById('tbodyTatDiario').innerHTML=htmlDiario||'<tr><td colspan=6 class="text-center">Sin datos</td></tr>';
     document.getElementById('tbodyTatDiarioResumen').innerHTML=htmlResumen||'<tr><td colspan=7 class="text-center">Sin datos</td></tr>';
     var prom=c?Math.round(tot/c):0;
-    document.getElementById('promDiario').innerHTML='Promedio: '+toTimeTAT(prom)+' | META 01:10 | INGRESO REAL: '+(cGar?toTime(sumGar/cGar):'--:--');
+    document.getElementById('promDiario').innerHTML='Promedio: '+toTimeTAT(prom)+' | INGRESO REAL: '+(cGar?toTime(sumGar/cGar):'--:--');
     document.getElementById('detTotalIngreso').innerText=cGar?toTime(sumGar/cGar):'';document.getElementById('detTotalInicio').innerText=cIni?toTime(sumIni/cIni):'';document.getElementById('detTotalSalida').innerText=cSal?toTime(sumSal/cSal):'';document.getElementById('detTotalTat').innerText=prom?toTimeTAT(prom):'';
-    if(ch1)ch1.destroy(); ch1=new Chart(document.getElementById('chartTatDiario'),{type:'line',data:{labels:datos.map(function(x){return x.placa}),datasets:[{label:'TAT (min)',data:datos.map(function(x){return x.min}),borderColor:'#0a3a8a',borderWidth:2,tension:0.3},{label:'META 70',data:datos.map(function(){return 70}),borderColor:'red',borderDash:[5,5]}]},options:{responsive:true}});
+    if(ch1)ch1.destroy(); ch1=new Chart(document.getElementById('chartTatDiario'),{type:'line',data:{labels:datos.map(function(x){return x.placa}),datasets:[{label:'TAT (min)',data:datos.map(function(x){return x.min}),borderColor:'#0a3a8a',borderWidth:2,tension:0.3}]},options:{responsive:true}});
     var hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]'); var htmlHist=''; var totIng=0,totIni=0,totSalH=0,totTat=0; var nIng=0,nIni=0,nSalH=0,nTat=0;
     hist.forEach(function(x){htmlHist+='<tr><td class="p-1 border border-black bg-white">'+x.fecha+'</td><td class="p-1 border border-black bg-white">'+(x.promIngreso||'--:--')+'</td><td class="p-1 border border-black bg-white">'+(x.promInicio||'--:--')+'</td><td class="p-1 border border-black bg-white">'+(x.promSalida||'--:--')+'</td><td class="p-1 border border-black bg-white font-bold">'+x.promTAT+'</td></tr>'; if(x.ingresoMin!=null){totIng+=x.ingresoMin;nIng++} if(x.inicioMin!=null){totIni+=x.inicioMin;nIni++} if(x.salidaMin!=null){totSalH+=x.salidaMin;nSalH++} if(x.min!=null){totTat+=x.min;nTat++}});
-    document.getElementById('tbodyPromSemanal').innerHTML=htmlHist||'<tr><td colspan=5 class="text-center text-gray-400">Sin días guardados</td></tr>';
+    document.getElementById('tbodyPromSemanal').innerHTML=htmlHist||'<tr><td colspan=5 class="text-center text-gray-400">Sin días</td></tr>';
     document.getElementById('totalIngreso').innerText=nIng?toTime(totIng/nIng):'';document.getElementById('totalInicio').innerText=nIni?toTime(totIni/nIni):'';document.getElementById('totalSalida').innerText=nSalH?toTime(totSalH/nSalH):'';document.getElementById('totalTAT').innerText=nTat?toTimeTAT(totTat/nTat):'';
-    if(ch2)ch2.destroy(); ch2=new Chart(document.getElementById('chartPromSemanal'),{type:'line',data:{labels:hist.map(function(x){return x.fecha}),datasets:[{label:'INGRESO hora real',data:hist.map(function(x){return x.ingresoMin}),borderColor:'#2563eb',tension:0.3},{label:'SALIDA hora real',data:hist.map(function(x){return x.salidaMin}),borderColor:'#10b981',tension:0.3},{label:'TAT (min)',data:hist.map(function(x){return x.min}),borderColor:'#000',borderWidth:2,tension:0.3}]},options:{responsive:true}});
+    if(ch2)ch2.destroy(); ch2=new Chart(document.getElementById('chartPromSemanal'),{type:'line',data:{labels:hist.map(function(x){return x.fecha}),datasets:[{label:'INGRESO',data:hist.map(function(x){return x.ingresoMin}),borderColor:'#2563eb',tension:0.3},{label:'SALIDA',data:hist.map(function(x){return x.salidaMin}),borderColor:'#10b981',tension:0.3}]},options:{responsive:true}});
   }catch(e){console.log(e)}
 }
 window.guardarDia=function(){
   var filas=document.querySelectorAll('#tbodyPrincipal tr'); if(filas.length==0){alert('No hay unidades');return}
-  var DATA=JSON.parse(localStorage.getItem('DATA_MADRE')||'[]'); var sumGar=0,cGar=0,sumIni=0,cIni=0,sumSal=0,cSal=0,sumTat=0,cTat=0;
+  var DATA=JSON.parse(localStorage.getItem('DATA_MADRE')||'[]');
+  var sumGar=0,cGar=0,sumIni=0,cIni=0,sumSal=0,cSal=0,sumTat=0,cTat=0;
   filas.forEach(function(f){var td=f.querySelectorAll('td');if(td.length<18)return; var mGar=toMin(td[9].innerText); if(mGar!=null){sumGar+=mGar;cGar++} var mIni=toMin(td[10].innerText); if(mIni!=null){sumIni+=mIni;cIni++} var mSal=toMin(td[13].innerText); if(mSal!=null){sumSal+=mSal;cSal++} var tat=td[17].innerText; var mTat=toMin(tat); if(mTat!=null){sumTat+=mTat;cTat++} DATA.push({fecha:fechaStr,transporte:td[1].innerText,placa:td[2].innerText,tracto:td[3].innerText,carreta:td[4].innerText,pallets:td[5].innerText,tipoProd:td[6].innerText,procedencia:td[7].innerText,tipo:td[8].innerText,garita:td[9].innerText,inicio:td[10].innerText,fin:td[11].innerText,verif:td[12].innerText,salida:td[13].innerText,ingreso:td[14].innerText,status:td[15].innerText,tat:td[17].innerText});});
   localStorage.setItem('DATA_MADRE',JSON.stringify(DATA));
   var promGar=cGar?Math.round(sumGar/cGar):null; var promIni=cIni?Math.round(sumIni/cIni):null; var promSal=cSal?Math.round(sumSal/cSal):null; var promTat=cTat?Math.round(sumTat/cTat):0;
   var hist=JSON.parse(localStorage.getItem('historicoTAT')||'[]');
   hist.push({fecha:fechaStr,promIngreso:promGar!=null?toTime(promGar):'--:--',promInicio:promIni!=null?toTime(promIni):'--:--',promSalida:promSal!=null?toTime(promSal):'--:--',promTAT:toTimeTAT(promTat)+':00',ingresoMin:promGar,inicioMin:promIni,salidaMin:promSal,min:promTat});
   localStorage.setItem('historicoTAT',JSON.stringify(hist));
-  alert('✅ GUARDADO en DATA: '+filas.length);
+  alert('✅ GUARDADO en DATA');
   cargarGraficos();
 }
 window.borrarData=function(){if(confirm('¿BORRAR TODA LA DATA MADRE?')){localStorage.removeItem('DATA_MADRE');localStorage.removeItem('historicoTAT');alert('DATA borrada');cargarGraficos();}}
 
-// *** EXCEL CORREGIDO FINAL - CON COLOR AMARILLO ENMARCADO Y FECHA ***
+// EXCEL ESTILO REFERENCIA BSF PUNTA HERMOSA - SOLO ESTO CAMBIA
 window.exportarExcel=function(){
-  var fechaDescarga = new Date().toLocaleString('es-PE',{dateStyle:'full',timeStyle:'short'});
-  var titulo = "Status Lima Sur - Descarga: " + fechaDescarga;
+  var fecha = new Date().toLocaleDateString('es-PE');
+  var hora = new Date().toLocaleTimeString('es-PE');
+  var total = document.querySelectorAll('#tbodyPrincipal tr').length;
+  var titulo = "BSF PUNTA HERMOSA - REPORTE DE OPERACIONES".replace("BSF PUNTA HERMOSA","STATUS CD LIMA SUR");
+  var subtitulo = "Fecha: "+fecha+" | Total Unidades: "+total+" | Generado: "+hora;
 
-  var headers=["P","TRANSPORTE","PLACA","PL. TRACTO","PL. CARRETA","N° PALLETS","TIPO DE PRODUCTO","PROCEDENCIA","TIPO","REPORTE EN GARITA","INICIO DESCARGA","FIN DESCARGA","FIN VERIF GR","SALIDA CD","INGRESO GR/SAP","STATUS","TAT"];
-  
+  var headers=["PRIORIDAD","PLACA","N° TRANS.","PROCEDENCIA","TIPO","HORA LLEGADA","ESTATUS"];
+
+  // Para tu referencia visual: si quieres TODOS los datos de Lima Sur usa headers completos
+  var headersFull=["PRIORIDAD","PLACA","N° TRANS.","PL. TRACTO","PL. CARRETA","N° PALLETS","TIPO DE PRODUCTO","PROCEDENCIA","TIPO","HORA LLEGADA","INICIO","FIN","VERIF","SALIDA","INGRESO","ESTATUS","TAT"];
+  var usarFull = true; // true = todos los datos Lima Sur con estilo de tu foto
+
+  var h = usarFull?headersFull:headers;
   var rows=[];
   document.querySelectorAll('#tbodyPrincipal tr').forEach(function(tr,i){
     var c=tr.querySelectorAll('td');if(c.length<18)return;
-    rows.push([i+1,c[1].innerText,c[2].innerText,c[3].innerText,c[4].innerText,c[5].innerText,c[6].innerText,c[7].innerText,c[8].innerText,c[9].innerText,c[10].innerText,c[11].innerText,c[12].innerText,c[13].innerText,c[14].innerText,c[15].innerText,c[17].innerText]);
+    if(usarFull){
+      rows.push([i+1,c[2].innerText,c[1].innerText,c[3].innerText,c[4].innerText,c[5].innerText,c[6].innerText,c[7].innerText,c[8].innerText,c[9].innerText,c[10].innerText,c[11].innerText,c[12].innerText,c[13].innerText,c[14].innerText,c[15].innerText,c[17].innerText]);
+    } else {
+      rows.push([i+1,c[2].innerText,c[1].innerText,c[7].innerText,c[8].innerText,c[9].innerText,c[15].innerText]);
+    }
   });
 
   var data=[];
   data.push([titulo]);
-  data.push(["Fecha: "+fechaDescarga]);
-  data.push([]); // vacía
-  data.push(headers);
+  data.push([subtitulo]);
+  data.push(h);
   rows.forEach(r=>data.push(r));
+  data.push(["","TOTAL","","","","","","","","","","","","","","",""+total]);
 
   var ws=XLSX.utils.aoa_to_sheet(data);
+  var border={top:{style:"thin"},bottom:{style:"thin"},left:{style:"thin"},right:{style:"thin"}};
+  var darkBlue={fgColor:{rgb:"0A1931"}};
+  var lightBlue={fgColor:{rgb:"DBE8F7"}};
+  var headerBlue={fgColor:{rgb:"1A365D"}};
+  var greenFill={fgColor:{rgb:"1F7A1F"}};
+  var grayFill={fgColor:{rgb:"F2F2F2"}};
 
-  // Estilos
-  var border = {top:{style:"thin"},bottom:{style:"thin"},left:{style:"thin"},right:{style:"thin"}};
-  var yellowFill = {fgColor:{rgb:"FACC15"}};
-  var headerStyle = {fill:yellowFill, font:{bold:true, color:{rgb:"000000"}, sz:11}, border:border, alignment:{horizontal:"center", vertical:"center"}};
-  var titleStyle = {font:{bold:true, sz:13}, alignment:{horizontal:"left"}};
-  var cellBorder = {border:border, alignment:{vertical:"center"}};
-
-  // Aplicar estilos
   var range = XLSX.utils.decode_range(ws['!ref']);
   for(var R=range.s.r; R<=range.e.r; R++){
     for(var C=range.s.c; C<=range.e.c; C++){
       var addr = XLSX.utils.encode_cell({r:R,c:C});
       if(!ws[addr]) continue;
-      if(R==0){ ws[addr].s = titleStyle; }
-      else if(R==3){ // headers fila 4 (index 3)
-        ws[addr].s = headerStyle;
-      } else if(R>3){
-        ws[addr].s = cellBorder;
+      if(R==0){
+        ws[addr].s={fill:darkBlue, font:{bold:true,color:{rgb:"FFFFFF"},sz:13}, alignment:{horizontal:"center",vertical:"center"}, border:border};
+      } else if(R==1){
+        ws[addr].s={fill:lightBlue, font:{sz:10,color:{rgb:"333333"}}, alignment:{horizontal:"center"}, border:border};
+      } else if(R==2){
+        ws[addr].s={fill:headerBlue, font:{bold:true,color:{rgb:"FFFFFF"},sz:11}, alignment:{horizontal:"center",vertical:"center"}, border:border};
+      } else if(R==data.length-1){
+        ws[addr].s={fill:headerBlue, font:{bold:true,color:{rgb:"FFFFFF"}}, alignment:{horizontal:"center"}, border:border};
+      } else {
+        var isGray = R%2==0;
+        var bg = isGray?grayFill:{fgColor:{rgb:"FFFFFF"}};
+        var s={fill:bg, font:{sz:11}, alignment:{horizontal:"center",vertical:"center"}, border:border};
+        if(C==4) s.font={color:{rgb:"2F5597"},sz:11};
+        if(h.length>7 && C==h.length-2){
+          s={fill:greenFill, font:{bold:true,color:{rgb:"FFFFFF"},sz:11}, alignment:{horizontal:"center"}, border:border};
+        } else if(h.length==7 && C==6){
+          s={fill:greenFill, font:{bold:true,color:{rgb:"FFFFFF"},sz:11}, alignment:{horizontal:"center"}, border:border};
+        }
+        ws[addr].s=s;
       }
     }
   }
-
-  // Merge título
-  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:16}}];
-
-  ws['!cols']=[
-    {wch:5},{wch:15},{wch:20},{wch:12},{wch:12},{wch:10},{wch:18},{wch:15},{wch:12},{wch:18},{wch:16},{wch:14},{wch:14},{wch:12},{wch:16},{wch:12},{wch:8}
-  ];
-
+  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:h.length-1}},{s:{r:1,c:0},e:{r:1,c:h.length-1}}];
+  ws['!cols']=h.map(()=>({wch:14}));
+  ws['!cols'][0]={wch:10}; ws['!cols'][1]={wch:18}; ws['!cols'][2]={wch:14};
   var wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,"Status");
-  XLSX.writeFile(wb,"STATUS_LIMA_SUR_"+new Date().toISOString().slice(0,10)+"_"+new Date().toLocaleTimeString('es-PE').replace(/:/g,'-')+".xlsx");
+  XLSX.writeFile(wb,"STATUS_LIMA_SUR_"+fecha.replace(/\//g,'-')+".xlsx");
 }
 
 window.exportarDataExcel=function(){
@@ -221,7 +239,6 @@ window.exportarDataExcel=function(){
   ws['!cols']=[{wch:12},{wch:15},{wch:18},{wch:12},{wch:12},{wch:15},{wch:8},{wch:10},{wch:10},{wch:10},{wch:8}];
   var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"DATA");XLSX.writeFile(wb,"DATA_MADRE.xlsx");
 }
-
 document.getElementById('buscador').addEventListener('input',function(e){var q=e.target.value.toLowerCase();document.querySelectorAll('#tbodyPrincipal tr').forEach(function(tr){tr.style.display=tr.innerText.toLowerCase().includes(q)?'':'none'})});
 actualizarContadores();
 </script>
